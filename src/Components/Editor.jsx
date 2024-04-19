@@ -6,16 +6,16 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 
-function MyEditor() {
+function MyEditor({strInputGraph, setStrInputGraph}) {
     const [code, setCode] = useState("")
     const placeholder = "Enter you graph here in this way \n{\n '1' : [2,3],\n '2': [1,4],...}"
       return (
         <Editor
           placeholder={placeholder}
           className="text_editor"
-          value={code}
+          value={strInputGraph}
           padding={10}
-          onValueChange={(code) => setCode(code)}
+          onValueChange={(code) => setStrInputGraph(code)}
           highlight={(code) => highlight(code, languages.js)}
           
         />
