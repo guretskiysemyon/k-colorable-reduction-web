@@ -26,6 +26,7 @@ const App = () => {
   const [strInputGraph, setStrInputGraph] = useState("")
 
   function createGraphObj() {
+    console.log(strInputGraph)
     if (strInputGraph){
       setInputGraph(JSON.parse(strInputGraph))
       console.log(JSON.parse(strInputGraph))
@@ -59,7 +60,7 @@ const App = () => {
             <Col 
               className="column"
               span={16}>
-            <MyEditor/>
+            <MyEditor strInputGraph={strInputGraph} setStrInputGraph= {setStrInputGraph}/>
             </Col>
             <Col 
               className="column_small"
