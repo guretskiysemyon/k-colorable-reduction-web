@@ -7,8 +7,7 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 
 function MyEditor({strInputGraph, setStrInputGraph}) {
-    const [code, setCode] = useState("")
-    const placeholder = "Enter you graph here in this way \n{\n '1' : [2,3],\n '2': [1,4],...}"
+    const placeholder = "Enter you graph here in this way \n{\n '1' : [2,3],\n '2': [1,4],...\n}"
       return (
         <Editor
           placeholder={placeholder}

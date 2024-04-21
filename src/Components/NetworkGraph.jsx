@@ -9,13 +9,13 @@ const NetworkGraph = ({graphObj}) => {
         const nodes = new DataSet([]);
         const edges = new DataSet([]);
         const dict_nodes = {}
-        let i = 1
+        let i = 0
         Object.keys(graph).forEach( key =>{
             nodes.add({id: i, label: key})
             dict_nodes[key] = i
             i += 1;
         })
-        console.log(dict_nodes)
+        // console.log(dict_nodes)
         Object.entries(graph).forEach(([key, values]) => {
             values.forEach(neighbor => {
                 let v1 = dict_nodes[key]
@@ -26,8 +26,8 @@ const NetworkGraph = ({graphObj}) => {
             });
         });
 
-        console.log(Array.from(nodes.get()));  // Log nodes to console
-        console.log(Array.from(edges.get()));  // Log edges to console
+        // console.log(Array.from(nodes.get()));  // Log nodes to console
+        // console.log(Array.from(edges.get()));  // Log edges to console
         return [nodes, edges]
     
         
