@@ -34,7 +34,10 @@ const NetworkGraph = ({graphObj, nodeColors}) => {
                 let v1 = dict_nodes[key]
                 let v2 = dict_nodes[neighbor]
                 if (v1 < v2)
-                    edges.add({from: v1 , to: v2})
+                    edges.add({
+                from: v1 ,
+                to: v2,
+                color: "#2a84de"})
                 //edges.add({ from: , to: parseInt(value) });
             });
         });
