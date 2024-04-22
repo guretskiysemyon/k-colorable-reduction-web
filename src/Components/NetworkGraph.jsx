@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from 'react';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
 
-const NetworkGraph = ({graphObj}) => {
+const NetworkGraph = ({graphObj, nodeColors}) => {
     const networkRef = useRef(null);
-    const graphRef = useRef({})
+    const graphRef = useRef({nodes: null, edges: null})
     // const nodesRef = useRef(null);  // Using ref to persist dataset
     // const edgesRef = useRef(null);
     
-
+    const colors = generateColors(3)
     function generateColors(numColors) {
         let colors = [];
         for (let i = 0; i < numColors; i++) {
@@ -47,7 +47,15 @@ const NetworkGraph = ({graphObj}) => {
         
     };
 
-    
+    useEffect(() => {
+        if (!nodeColors || !graphRef.current.nodes) return;
+            
+        const updates = Object.keys(nodeColors).map(key => ({
+            id: parseInt(key),
+            color: colors[nodeColors[key]]
+        }));
+        graphRef.current.nodes.update(updates);  // Efficiently update colors
+    }, [nodeColors]);  // Re-run this effect only when nodeColors changes
 
     useEffect(() => {
         const options = {}; // your network options

@@ -54,7 +54,7 @@ const App = () => {
       const data = await response.json(); // Wait for the JSON conversion of the response body
 
       // Log the success and perhaps update state or perform other actions with the data
-      console.log('Success:', data);
+      setColorMap(data.solution)
       return data;  // Optionally return data for further processing
   } catch (error) {
       // If an error occurs, log it
@@ -113,7 +113,7 @@ const App = () => {
             </Col>
           </Row>
           <Row>
-            <NetworkGraph graphObj= {inputGraph}/>
+            <NetworkGraph nodeColors={colorMap} graphObj= {inputGraph}/>
           </Row>
           </Content>
           
