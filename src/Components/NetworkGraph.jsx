@@ -4,6 +4,19 @@ import { DataSet } from 'vis-data';
 
 const NetworkGraph = ({graphObj}) => {
     const networkRef = useRef(null);
+    const graphRef = useRef({})
+    // const nodesRef = useRef(null);  // Using ref to persist dataset
+    // const edgesRef = useRef(null);
+    
+
+    function generateColors(numColors) {
+        let colors = [];
+        for (let i = 0; i < numColors; i++) {
+            let hue = i * 360 / numColors;
+            colors.push(`hsl(${hue}, 100%, 50%)`);
+        }
+        return colors;
+      } 
 
     function createGraph (graph){
         const nodes = new DataSet([]);
@@ -25,6 +38,7 @@ const NetworkGraph = ({graphObj}) => {
                 //edges.add({ from: , to: parseInt(value) });
             });
         });
+        
 
         // console.log(Array.from(nodes.get()));  // Log nodes to console
         // console.log(Array.from(edges.get()));  // Log edges to console
@@ -36,25 +50,20 @@ const NetworkGraph = ({graphObj}) => {
     
 
     useEffect(() => {
-        // Nodes and edges data
-        // const nodes = new DataSet([
-        //     { id: 1, label: 'Node 1' },
-        //     { id: 2, label: 'Node 2' },
-        //     { id: 3, label: 'Node 3' },
-        //     { id: 4, label: 'Node 4' },
-        //     { id: 5, label: 'Node 5' }
-        // ]);
-
-        // const edges = new DataSet([
-        //     { from: 1, to: 3 },
-        //     { from: 1, to: 2 },
-        //     { from: 2, to: 4 },
-        //     { from: 2, to: 5 }
-        // ]);
-
         const options = {}; // your network options
         const [nodes, edges] = createGraph(graphObj)
-        const network = new Network(networkRef.current, { nodes, edges }, options);
+        graphRef.current= {
+            nodes: nodes,
+            edges: edges
+        };
+        const network = new Network(networkRef.current, graphRef.current, options);
+        // console.log(nodesRef.current)
+        // console.log(edgesRef.current)
+        return () => {
+            if (network) {
+              network.destroy();
+            }
+          };
     }, [graphObj]);
 
     return <div ref={networkRef} style={{ height: '500px' }} />;
