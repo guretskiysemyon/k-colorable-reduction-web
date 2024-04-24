@@ -11,10 +11,10 @@ import {
   TreeSelect,
 } from "antd";
 
-const ParametersForm = ({ renderGraph }) => {
+const ParametersForm = ({ renderGraph, numColors, selectedTheory, setData}) => {
   const [componentSize, setComponentSize] = useState("default");
-  const [numColors, setNumColors] = useState(3);
-  const [selectedTheory, setSelectedTheory] = useState(undefined);
+  
+  
 
 
   const theories = ["LIA", "NLA",  "Array"]
@@ -22,9 +22,17 @@ const ParametersForm = ({ renderGraph }) => {
     setComponentSize(size);
   };
 
-  const handleChange = (value) => {
-    console.log("Selected:", value); // Optionally log the selected value to the console
-    setSelectedTheory(value); // Update the state with the new selected value
+  const handleChangeTreory = (value) => {
+    setData(prevState => ({
+      ...prevState,
+      theory: value
+    }));
+  };
+  const handleChangeNumColor = (value) => {
+    setData(prevState => ({
+      ...prevState,
+      numColors: value
+    }));
   };
   
   const onFinish = values => {
@@ -61,7 +69,7 @@ const ParametersForm = ({ renderGraph }) => {
           min={1}
           max={10}
           defaultValue={3}
-          onChange={(value) => setNumColors(value)}
+          onChange={handleChangeNumColor}
         />
       </Form.Item>
       <Form.Item
@@ -75,16 +83,11 @@ const ParametersForm = ({ renderGraph }) => {
         <Select
           placeholder="Please select a theory" // This is the placeholder text
           allowClear // This allows the user to clear the selected value
-          onChange={handleChange}
+          onChange={handleChangeTreory}
         >
           {theories.map( t => 
             <Select.Option key={t} value={t}>{t}</Select.Option>
-          )
-
-          }
-          {/* <Select.Option value="LIA">LIA</Select.Option>
-          <Select.Option value="NLA">NLA</Select.Option>
-          <Select.Option value="Array">Array</Select.Option> */}
+          )}
         </Select>
       </Form.Item>
 
