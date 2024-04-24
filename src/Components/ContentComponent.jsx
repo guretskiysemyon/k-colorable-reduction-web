@@ -6,6 +6,8 @@ import {Layout, theme } from 'antd';
 import MyEditor from './Editor';
 import ParametersForm from './ParametersForm';
 import NetworkGraph from './NetworkGraph';
+import OutputComponent from './Modules/OutputComponent';
+
 
 const { Content} = Layout;
 
@@ -91,6 +93,7 @@ function ContentComponent() {
               className="column_small"
               span={8}>
               <ParametersForm numColors={inputData.numColors}  selectedTheory={inputData.theory} renderGraph={createGraphObj} setData={setInputData}/>
+              <OutputComponent text={"Hello wWorld!\n sat\n x: True"}/>
             </Col>
           </Row>
           <Row>

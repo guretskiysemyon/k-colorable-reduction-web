@@ -1,0 +1,29 @@
+.container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+
+.output_window {
+    background-color: #001529;
+    color: #dcdcdc;
+    padding: 20px;
+    border-radius: 5px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 15px;
+    overflow-x: auto;
+}
+
+.copy_button{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+    background-color: rgb(51, 51, 51);
+    color: white;
+    border-radius: 5px;
+    font-family: Consolas, "Courier New", monospace;
+}
