@@ -13,7 +13,7 @@ const NetworkGraph = ({graphObj, nodeColors, setMapIdLabel}) => {
         let colors = [];
         for (let i = 0; i < numColors; i++) {
             let hue = i * 360 / numColors;
-            colors.push(`hsl(${hue}, 100%, 50%)`);
+            colors.push(`hsl(${hue}, 50%, 50%)`);
         }
         return colors;
       } 
@@ -25,7 +25,9 @@ const NetworkGraph = ({graphObj, nodeColors, setMapIdLabel}) => {
         const mapIdLabel = []
         let i = 0
         Object.keys(graph).forEach( key =>{
-            nodes.add({id: i, label: key})
+            nodes.add({id: i, label: key, font: {
+                color: '#ffffff'  // Set the font color to white
+            }})
             dict_nodes[key] = i
             mapIdLabel[i] = key
             i += 1;
