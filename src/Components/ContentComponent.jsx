@@ -1,5 +1,5 @@
 
-import React, { useState, useContext} from 'react';
+import React, { useState, useContext, useEffect} from 'react';
 import { Col, Row } from 'antd';
 import axios from 'axios';
 import {Layout, theme } from 'antd';
@@ -7,6 +7,7 @@ import MyEditor from './Editor';
 import ParametersForm from './ParametersForm';
 import NetworkGraph from './NetworkGraph';
 import OutputComponent from './Modules/OutputComponent';
+import useFetching from '../Hooks/useFetching';
 
 
 const { Content} = Layout;
@@ -20,59 +21,71 @@ function ContentComponent() {
     
     
 
-    const [colorMap, setColorMap] = useState({})
+    
     const [inputGraph, setInputGraph] = useState({})
+    const [strGraph, setStrInputGraph] = useState("")
     const [inputData, setInputData] = useState({
-        strGraph: "",
         numColors: 3,
         theory : undefined
     })
 
-    async function fetchSolution(){
-        const dataToSend = {
-          graph: inputData.strGraph,  // sending the string representation of the graph
-          k: inputData.numColors,
-          theory: inputData.theory  // as specified, we're using a default value of 3
-        };
-    
-        // Use fetch API to send the POST request
-        try {
-          // Make the HTTP request and wait for the fetch to complete, then wait for the JSON conversion
-          const response = await fetch('http://localhost:8000/graph', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(dataToSend)
-          });
-          const data = await response.json(); // Wait for the JSON conversion of the response body
-    
-          // Log the success and perhaps update state or perform other actions with the data
-          setColorMap(data.solution)
-          return data;  // Optionally return data for further processing
-      } catch (error) {
-          // If an error occurs, log it
-          console.error('Error:', error);
-      }
-    
-      }
-    
-      function createGraphObj() {
-        console.log(inputData)
-        if (inputData.strGraph) {
-          try {
-            let graph = JSON.parse(inputData.strGraph);
-            setInputGraph(graph);
-            fetchSolution()
-            // Prepare the data to be sent
-            
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      }
-    
+    const [mapIdLabel, setMapIdLabel] = useState([])
+    const [output, setOutput] = useState("")
+    const { fetchedData, error, fetchGraph } = useFetching();
 
+    
+    
+      function showResult(data){
+        console.log(data)
+        let text = data.result + "\n"
+        //setColorMap(data.solution)
+        if (data.result === "unsat")
+          return
+        
+        let n = mapIdLabel.length
+        console.log(mapIdLabel)
+        console.log(data.solution)
+        for (let i = 0; i < n; i++) {
+          text += mapIdLabel[i] + ": " + data.solution[i] + "\n"
+        }
+        setOutput(text)
+      }
+
+      useEffect(() => {
+        // Ensure this effect runs only when there's new data to be processed
+        if (fetchedData && mapIdLabel.length > 0) {
+            showResult(fetchedData); // Call showResult only when both conditions are met
+        }
+    }, [fetchedData, mapIdLabel]);
+
+
+      useEffect(() => {
+        // Define a function inside useEffect to perform the fetch
+        async function createGraphObj() {
+          console.log(inputData)
+          
+          if (strGraph && inputData.numColors  && inputData.theory) {
+            setMapIdLabel([])
+            try {
+              let graph = JSON.parse(strGraph);
+              setInputGraph(graph);
+              console.log(inputData)
+              fetchGraph(strGraph, inputData.numColors, inputData.theory)
+              //setFetchedData(data)
+              // Prepare the data to be sent
+              
+            } catch (e) {
+              
+            }
+          }
+        }// Call the function once the effect is run
+
+        createGraphObj()
+
+    }, [inputData]);
+      
+
+    
     return ( 
         <Content className='content-page'>
         <Layout
@@ -87,17 +100,22 @@ function ContentComponent() {
             <Col 
               className="column"
               span={16}>
-            <MyEditor strInputGraph={inputData.strGraph} setStrInputGraph= {setInputData}/>
+            <MyEditor strInputGraph={strGraph} setStrInputGraph= {setStrInputGraph}/>
             </Col>
             <Col 
               className="column_small"
               span={8}>
-              <ParametersForm numColors={inputData.numColors}  selectedTheory={inputData.theory} renderGraph={createGraphObj} setData={setInputData}/>
-              <OutputComponent text={"Hello wWorld!\n sat\n x: True"}/>
+              <ParametersForm numColors={inputData.numColors}  selectedTheory={inputData.theory} setData={setInputData}/>
+              <OutputComponent text={output}/>
             </Col>
           </Row>
           <Row>
-            <NetworkGraph nodeColors={colorMap} graphObj= {inputGraph}/>
+            {error
+            ? <p>Error fetching data: {error.message}</p>
+            : <NetworkGraph setMapIdLabel={setMapIdLabel} nodeColors={fetchedData ? fetchedData.solution : null} graphObj= {inputGraph}/>
+
+            }
+            
           </Row>
           </Content>
           

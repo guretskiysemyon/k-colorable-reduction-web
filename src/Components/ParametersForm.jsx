@@ -103,7 +103,7 @@
 import React, { useState } from "react";
 import { Button, Form, InputNumber, Select } from "antd";
 
-const ParametersForm = ({ renderGraph ,setData}) => {
+const ParametersForm = ({ setData}) => {
   const [componentSize, setComponentSize] = useState("default");
   const  defaultNumColors = 3;
 
@@ -113,13 +113,12 @@ const ParametersForm = ({ renderGraph ,setData}) => {
   };
 
   const onFinish = values => {
-    setData(prevState => ({
-      ...prevState,
+    setData({
       numColors: values.numColors,
       theory : values.theory
-    }));
-    console.log('Received values of form: ', values);
-    renderGraph();
+    });
+    //console.log('Received values of form: ', values);
+    // createGraphObj();
   };
 
   return (

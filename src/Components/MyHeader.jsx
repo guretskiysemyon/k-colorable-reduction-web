@@ -1,13 +1,14 @@
 import React from 'react';
 import {Layout, Menu} from 'antd';
+import { Link } from 'react-router-dom';
 const {Header} = Layout;
 
 
 
-const items1 = ['1', '2', '3'].map((key) => ({
-    key,
-    label: `nav ${key}`,
-  }));
+const items1 = [
+  { key: 'main', label: <Link to="/">Main</Link> },
+  { key: 'about', label: <Link to="/about">About</Link> }
+];
 
 function MyHeader() {
     return ( 
@@ -16,7 +17,7 @@ function MyHeader() {
             <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={['2']}
+            defaultSelectedKeys={['main']}
             items={items1}
             className='menu'
         />

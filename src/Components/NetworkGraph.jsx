@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
 
-const NetworkGraph = ({graphObj, nodeColors}) => {
+const NetworkGraph = ({graphObj, nodeColors, setMapIdLabel}) => {
     const networkRef = useRef(null);
     const graphRef = useRef({nodes: null, edges: null})
     // const nodesRef = useRef(null);  // Using ref to persist dataset
@@ -21,13 +21,16 @@ const NetworkGraph = ({graphObj, nodeColors}) => {
     function createGraph (graph){
         const nodes = new DataSet([]);
         const edges = new DataSet([]);
-        const dict_nodes = {}
+        let dict_nodes = {}
+        const mapIdLabel = []
         let i = 0
         Object.keys(graph).forEach( key =>{
             nodes.add({id: i, label: key})
             dict_nodes[key] = i
+            mapIdLabel[i] = key
             i += 1;
         })
+        setMapIdLabel(mapIdLabel)
         // console.log(dict_nodes)
         Object.entries(graph).forEach(([key, values]) => {
             values.forEach(neighbor => {

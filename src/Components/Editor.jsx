@@ -11,10 +11,7 @@ function MyEditor({strInputGraph, setStrInputGraph}) {
     const placeholder = "Enter you graph here in this way \n{\n '1' : [2,3],\n '2': [1,4],...\n}"
 
     function changeValue(code) {
-      setStrInputGraph(prevState => ({
-        ...prevState,
-        strGraph: code
-      }));
+      setStrInputGraph(code);
     }
 
       return (
