@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
 
-const NetworkGraph = ({graphObj, nodeColors,numberColors, setMapIdLabel}) => {
+const NetworkGraph = ({graphObj, nodeColors,numberColors}) => {
     const networkRef = useRef(null);
     const graphRef = useRef({nodes: null, edges: null})
 
@@ -17,36 +17,30 @@ const NetworkGraph = ({graphObj, nodeColors,numberColors, setMapIdLabel}) => {
         return colors;
       } 
 
-    function createGraph (graph){
-        const nodes = new DataSet([]);
-        const edges = new DataSet([]);
-        let dict_nodes = {}
-        const mapIdLabel = []
-        let i = 0
-        Object.keys(graph).forEach( key =>{
-            nodes.add({id: i, label: key, font: {
-                color: '#ffffff'  // Set the font color to white
-            }})
-            dict_nodes[key] = i
-            mapIdLabel[i] = key
-            i += 1;
-        })
-        setMapIdLabel(mapIdLabel)
-        // console.log(dict_nodes)
-        Object.entries(graph).forEach(([key, values]) => {
-            values.forEach(neighbor => {
-                let v1 = dict_nodes[key]
-                let v2 = dict_nodes[neighbor]
-                if (v1 < v2)
-                    edges.add({
-                from: v1 ,
-                to: v2,
-                color: "#2a84de"})
-                //edges.add({ from: , to: parseInt(value) });
-            });
-        });
-        
+    function createGraph (){
 
+
+        const nodes = new DataSet(
+            graphObj.nodes().map(node => ({
+              id: node,
+              label: node,
+            //   title: node,
+              font: {
+                color: '#ffffff'  // Set the font color to white
+            }
+            }))
+          );
+  
+        const edges = new DataSet(
+        graphObj.edges().map(edge => ({
+            from: edge.v,
+            to: edge.w,
+        //   arrows: 'to',
+            color: "#2a84de"
+        }))
+        );
+  
+        
         // console.log(Array.from(nodes.get()));  // Log nodes to console
         // console.log(Array.from(edges.get()));  // Log edges to console
         return [nodes, edges]
@@ -57,16 +51,27 @@ const NetworkGraph = ({graphObj, nodeColors,numberColors, setMapIdLabel}) => {
     useEffect(() => {
         if (!nodeColors || !graphRef.current.nodes) return;
             
+
+        
         const updates = Object.keys(nodeColors).map(key => ({
-            id: parseInt(key),
+            id: key,
             color: colors[nodeColors[key]]
         }));
+        console.log(updates)
         graphRef.current.nodes.update(updates);  // Efficiently update colors
     }, [nodeColors]);  // Re-run this effect only when nodeColors changes
 
     useEffect(() => {
+        
+
+
+
         const options = {}; // your network options
-        const [nodes, edges] = createGraph(graphObj)
+        if (!graphObj)
+            return
+
+        const [nodes, edges] = createGraph()
+
         graphRef.current= {
             nodes: nodes,
             edges: edges

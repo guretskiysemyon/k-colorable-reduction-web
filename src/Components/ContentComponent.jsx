@@ -7,7 +7,7 @@ import ParametersForm from './ParametersForm';
 import NetworkGraph from './NetworkGraph';
 import OutputComponent from './Modules/OutputComponent';
 import useFetching from '../Hooks/useFetching';
-
+import { read } from 'graphlib-dot';
 
 const { Content} = Layout;
 
@@ -21,17 +21,17 @@ function ContentComponent() {
     
 
     
-    const [inputGraph, setInputGraph] = useState({})
+    const [inputGraph, setInputGraph] = useState(null)
     const [strGraph, setStrInputGraph] = useState("")
     const [inputData, setInputData] = useState({
         numColors: 3,
         theory : undefined
     })
 
-    const [mapIdLabel, setMapIdLabel] = useState([])
+    
     const [output, setOutput] = useState("")
     const { fetchedData, error, fetchGraph } = useFetching();
-
+    
     
     
     function showResult(data){
@@ -43,40 +43,51 @@ function ContentComponent() {
         return
       }
       let text = "Colorable\n"
-      let n = mapIdLabel.length
-      console.log(mapIdLabel)
       console.log(data.solution)
-      for (let i = 0; i < n; i++) {
-        text += mapIdLabel[i] + ": " + data.solution[i] + "\n"
+      for (const key in data.solution) {
+        if (data.solution.hasOwnProperty(key)) {  // This check is necessary to ensure you only access properties defined on the object itself
+          text += key + ": " + data.solution[key] + "\n";
+        }
       }
+      // text += data.solution
       setOutput(text)
     }
 
-    useEffect(() => {
-      // Ensure this effect runs only when there's new data to be processed
-      if (fetchedData && mapIdLabel.length > 0) {
-          showResult(fetchedData); // Call showResult only when both conditions are met
-      }
-    }, [fetchedData, mapIdLabel]);
 
+
+  function parse() {
+    console.log('Starting parse with strGraph:', strGraph); // Log input
+    try {
+        const parsedGraph = read(strGraph);
+        return parsedGraph
+    } catch(err) {
+        setOutput('Invalid DOT format or other error parsing the file.');
+        console.log('Error parsing DOT file:', err);
+    }
+  }
+  
 
     useEffect(() => {
       // Define a function inside useEffect to perform the fetch
       async function createGraphObj() {
-        console.log(inputData)
         
         if (strGraph && inputData.numColors  && inputData.theory) {
-          setMapIdLabel([])
+          setOutput("")
           try {
-            let graph = JSON.parse(strGraph);
-            setInputGraph(graph);
-            console.log(inputData)
-            fetchGraph(strGraph, inputData.numColors, inputData.theory)
+            const parsedGraph = parse();
+            setInputGraph(parsedGraph);
+
+            fetchGraph(strGraph, inputData.numColors, inputData.theory);
+            console.log(fetchedData)  
+            showResult(fetchedData);
+            // showResult(fetchedData); // Call showResult only when both conditions are met
+
             //setFetchedData(data)
             // Prepare the data to be sent
             
-          } catch (e) {
-            
+          } catch (err) {
+              setOutput("Fail to connect to server!")
+              console.log(err)
           }
         }
       }// Call the function once the effect is run
@@ -113,7 +124,7 @@ function ContentComponent() {
           <Row>
             {error
             ? <p>Error fetching data: {error.message}</p>
-            : <NetworkGraph setMapIdLabel={setMapIdLabel} numberColors={inputData.numColors} nodeColors={fetchedData ? fetchedData.solution : null} graphObj= {inputGraph}/>
+            : <NetworkGraph numberColors={inputData.numColors} nodeColors={fetchedData ? fetchedData.solution : null} graphObj= {inputGraph}/>
 
             }
             
