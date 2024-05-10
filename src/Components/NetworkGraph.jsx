@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
 
-const NetworkGraph = ({graphObj, nodeColors, setMapIdLabel}) => {
+const NetworkGraph = ({graphObj, nodeColors,numberColors, setMapIdLabel}) => {
     const networkRef = useRef(null);
     const graphRef = useRef({nodes: null, edges: null})
-    // const nodesRef = useRef(null);  // Using ref to persist dataset
-    // const edgesRef = useRef(null);
+
     
-    const colors = generateColors(3)
+    const colors = generateColors(numberColors)
     function generateColors(numColors) {
         let colors = [];
         for (let i = 0; i < numColors; i++) {

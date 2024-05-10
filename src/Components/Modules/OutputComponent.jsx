@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "./OutputComponent.module.css"
 
 const OutputComponent = ({ text }) => {
@@ -14,6 +14,9 @@ const OutputComponent = ({ text }) => {
       setIsCopied(false);
     }
   };
+  useEffect( () => {
+    
+  })
 
   return (
     <div className={styles.container}>

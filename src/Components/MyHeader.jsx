@@ -5,7 +5,7 @@ const {Header} = Layout;
 
 
 
-const items1 = [
+const items = [
   { key: 'main', label: <Link to="/">Main</Link> },
   { key: 'about', label: <Link to="/about">About</Link> }
 ];
@@ -18,7 +18,7 @@ function MyHeader() {
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={['main']}
-            items={items1}
+            items={items}
             className='menu'
         />
       </Header>
