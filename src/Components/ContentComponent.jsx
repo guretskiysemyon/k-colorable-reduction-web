@@ -53,18 +53,21 @@ function ContentComponent() {
       setOutput(text)
     }
 
+    useEffect(() => {
+      if (fetchedData)
+          showResult(fetchedData);
+    },[fetchedData])
 
-
-  function parse() {
-    console.log('Starting parse with strGraph:', strGraph); // Log input
-    try {
-        const parsedGraph = read(strGraph);
-        return parsedGraph
-    } catch(err) {
-        setOutput('Invalid DOT format or other error parsing the file.');
-        console.log('Error parsing DOT file:', err);
+    function parse() {
+      console.log('Starting parse with strGraph:', strGraph); // Log input
+      try {
+          const parsedGraph = read(strGraph);
+          return parsedGraph
+      } catch(err) {
+          setOutput('Invalid DOT format or other error parsing the file.');
+          console.log('Error parsing DOT file:', err);
+      }
     }
-  }
   
 
     useEffect(() => {
@@ -76,10 +79,11 @@ function ContentComponent() {
           try {
             const parsedGraph = parse();
             setInputGraph(parsedGraph);
-
+            console.log(strGraph)
+            
             fetchGraph(strGraph, inputData.numColors, inputData.theory);
-            console.log(fetchedData)  
-            showResult(fetchedData);
+            // console.log(fetchedData)  
+            // showResult(data);
             // showResult(fetchedData); // Call showResult only when both conditions are met
 
             //setFetchedData(data)

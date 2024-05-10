@@ -21,14 +21,18 @@ const NetworkGraph = ({graphObj, nodeColors,numberColors}) => {
 
 
         const nodes = new DataSet(
-            graphObj.nodes().map(node => ({
-              id: node,
-              label: node,
-            //   title: node,
-              font: {
-                color: '#ffffff'  // Set the font color to white
-            }
-            }))
+            graphObj.nodes().map(nodeId => {
+              const nodeDetails = graphObj._nodes[nodeId]; // Access node details from the _nodes object
+          
+              return {
+                id: nodeId,
+                label: nodeDetails.label || nodeId, // Use label from node details or default to nodeId if label is missing
+                // title: nodeDetails.title || '', // Optionally, if you need to include titles and they exist in nodeDetails
+                font: {
+                  color: '#ffffff' // Set the font color to white
+                }
+              };
+            })
           );
   
         const edges = new DataSet(
@@ -69,7 +73,7 @@ const NetworkGraph = ({graphObj, nodeColors,numberColors}) => {
         const options = {}; // your network options
         if (!graphObj)
             return
-
+        
         const [nodes, edges] = createGraph()
 
         graphRef.current= {
