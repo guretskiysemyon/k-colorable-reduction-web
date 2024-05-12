@@ -1,0 +1,48 @@
+
+import React, { useState, useEffect} from 'react';
+import { Col, Row } from 'antd';
+import {Layout, theme } from 'antd';
+import MyEditor from './Editor';
+import ParametersForm from './ParametersForm';
+import NetworkGraph from './NetworkGraph';
+import OutputComponent from './Modules/OutputComponent';
+import useFetching from '../Hooks/useFetching';
+import { read } from 'graphlib-dot';
+
+
+function InputComponent({createAndFetch}) {
+    const defaultValue = 3;
+    const [strGraph, setStrInputGraph] = useState("")
+    const [inputData, setInputData] = useState({
+        numColors: defaultValue,
+        theory : undefined
+    })
+
+    useEffect(()=> {
+        console.log(inputData)
+        if (inputData.numColors && inputData.theory && strGraph){
+            createAndFetch(strGraph, inputData)
+            //console.log("Called")
+        }
+            
+    }, [inputData])
+   
+
+    return (  
+        <Row>
+            <Col 
+              className="column"
+              span={16}>
+            <MyEditor strInputGraph={strGraph} setStrInputGraph= {setStrInputGraph}/>
+            </Col>
+            <Col 
+              className="column_small"
+              span={8}>
+              <ParametersForm setData={setInputData}/>
+              
+            </Col>
+          </Row>
+    );
+}
+
+export default InputComponent;

@@ -6,6 +6,8 @@ function useFetching() {
     const [error, setError] = useState(null);
 
     const fetchGraph = async (strGraph, numColors, theory) => {
+        setError(null)
+        setFetchedData(null)
         const dataToSend = {
             graph: strGraph,
             k: numColors,

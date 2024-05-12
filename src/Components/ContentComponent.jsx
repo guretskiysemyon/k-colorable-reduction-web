@@ -8,6 +8,7 @@ import NetworkGraph from './NetworkGraph';
 import OutputComponent from './Modules/OutputComponent';
 import useFetching from '../Hooks/useFetching';
 import { read } from 'graphlib-dot';
+import InputComponent from './InputComponents';
 
 const { Content} = Layout;
 
@@ -22,28 +23,32 @@ function ContentComponent() {
 
     
     const [inputGraph, setInputGraph] = useState(null)
-    const [strGraph, setStrInputGraph] = useState("")
-    const [inputData, setInputData] = useState({
-        numColors: 3,
-        theory : undefined
-    })
+    // const [strGraph, setStrInputGraph] = useState("")
+    // const [inputData, setInputData] = useState({
+    //     numColors: 3,
+    //     theory : undefined
+    // })
 
-    
+    const [coloringGraph, setColoringGraph] = useState({
+      numColors: 3,
+      coloring : null
+    })
     const [output, setOutput] = useState("")
     const { fetchedData, error, fetchGraph } = useFetching();
     
     
     
     function showResult(data){
-      console.log(data)
-      
+      //console.log(data)
+      let text = data.formula + "\n"
       //setColorMap(data.solution)
       if (data.result === "unsat"){
-        setOutput("Not Colorable")
+        text += "Not Colorable"
+        setOutput(text)
         return
       }
-      let text = "Colorable\n"
-      console.log(data.solution)
+      text += "Colorable\n"
+      //console.log(data.solution)
       for (const key in data.solution) {
         if (data.solution.hasOwnProperty(key)) {  // This check is necessary to ensure you only access properties defined on the object itself
           text += key + ": " + data.solution[key] + "\n";
@@ -54,12 +59,13 @@ function ContentComponent() {
     }
 
     useEffect(() => {
+      
       if (fetchedData)
           showResult(fetchedData);
     },[fetchedData])
 
-    function parse() {
-      console.log('Starting parse with strGraph:', strGraph); // Log input
+    function parse(strGraph) {
+      //console.log('Starting parse with strGraph:', strGraph); // Log input
       try {
           const parsedGraph = read(strGraph);
           return parsedGraph
@@ -69,36 +75,34 @@ function ContentComponent() {
       }
     }
   
+    async function createGraphAndFetchResult(strGraph, inputData) {
+      
+      if (strGraph && inputData.numColors  && inputData.theory) {
+        setOutput("")
+        try {
+          const parsedGraph = parse(strGraph);
+          setInputGraph(parsedGraph);
+          console.log(parsedGraph)
+          
+          await fetchGraph(strGraph, inputData.numColors, inputData.theory);
+          console.log(fetchedData.solution)
+          setColoringGraph({
+            numColors: inputData.numColors,
+            coloring : fetchedData ? fetchedData.solution : null
+          })
+          // console.log(fetchedData)  
+          // showResult(data);
+          // showResult(fetchedData); // Call showResult only when both conditions are met
 
-    useEffect(() => {
-      // Define a function inside useEffect to perform the fetch
-      async function createGraphObj() {
-        
-        if (strGraph && inputData.numColors  && inputData.theory) {
-          setOutput("")
-          try {
-            const parsedGraph = parse();
-            setInputGraph(parsedGraph);
-            console.log(strGraph)
-            
-            fetchGraph(strGraph, inputData.numColors, inputData.theory);
-            // console.log(fetchedData)  
-            // showResult(data);
-            // showResult(fetchedData); // Call showResult only when both conditions are met
-
-            //setFetchedData(data)
-            // Prepare the data to be sent
-            
-          } catch (err) {
-              setOutput("Fail to connect to server!")
-              console.log(err)
-          }
+          //setFetchedData(data)
+          // Prepare the data to be sent
+          
+        } catch (err) {
+            setOutput("Fail to connect to server!")
+            console.log(err)
         }
-      }// Call the function once the effect is run
-
-      createGraphObj()
-
-  }, [inputData]);
+      }
+    }
       
 
     
@@ -112,23 +116,18 @@ function ContentComponent() {
           }}
         >
           <Content className='content'>
+          <InputComponent createAndFetch={createGraphAndFetchResult} />
           <Row>
-            <Col 
-              className="column"
-              span={16}>
-            <MyEditor strInputGraph={strGraph} setStrInputGraph= {setStrInputGraph}/>
-            </Col>
-            <Col 
-              className="column_small"
-              span={8}>
-              <ParametersForm numColors={inputData.numColors}  selectedTheory={inputData.theory} setData={setInputData}/>
+            <Col
+              span={16}
+            >
               <OutputComponent text={output}/>
             </Col>
           </Row>
           <Row>
             {error
             ? <p>Error fetching data: {error.message}</p>
-            : <NetworkGraph numberColors={inputData.numColors} nodeColors={fetchedData ? fetchedData.solution : null} graphObj= {inputGraph}/>
+            : <NetworkGraph coloringGraph={coloringGraph} graphObj= {inputGraph}/>
 
             }
             

@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState,useEffect, useRef } from 'react';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
 
-const NetworkGraph = ({graphObj, nodeColors,numberColors}) => {
+const NetworkGraph = ({graphObj, coloringGraph}) => {
     const networkRef = useRef(null);
     const graphRef = useRef({nodes: null, edges: null})
-
+    const [graphFinished, setGraphFinished] = useState(false)
     
-    const colors = generateColors(numberColors)
+    
     function generateColors(numColors) {
-        let colors = [];
+        const colors = [];
         for (let i = 0; i < numColors; i++) {
             let hue = i * 360 / numColors;
             colors.push(`hsl(${hue}, 50%, 50%)`);
@@ -18,8 +18,26 @@ const NetworkGraph = ({graphObj, nodeColors,numberColors}) => {
       } 
 
     function createGraph (){
-
-
+        setGraphFinished(false)
+        // console.log(graphObj.nodes())
+        // console.log(graphObj.edges())
+        // console.log("Node Data Being Added", graphObj.nodes().map(nodeId => {
+        //   const nodeDetails = graphObj._nodes[nodeId];
+        //   return {
+        //     id: nodeId,
+        //     label: nodeDetails.label || nodeId,
+        //     font: { color: '#ffffff' }
+        //   };
+        // }));
+        
+        // console.log("Edge Data Being Added", graphObj.edges().map(edge => {
+        //   return {
+        //     from: edge.v,
+        //     to: edge.w,
+        //     color: "#2a84de"
+        //   };
+        // }));
+        
         const nodes = new DataSet(
             graphObj.nodes().map(nodeId => {
               const nodeDetails = graphObj._nodes[nodeId]; // Access node details from the _nodes object
@@ -27,7 +45,6 @@ const NetworkGraph = ({graphObj, nodeColors,numberColors}) => {
               return {
                 id: nodeId,
                 label: nodeDetails.label || nodeId, // Use label from node details or default to nodeId if label is missing
-                // title: nodeDetails.title || '', // Optionally, if you need to include titles and they exist in nodeDetails
                 font: {
                   color: '#ffffff' // Set the font color to white
                 }
@@ -39,31 +56,31 @@ const NetworkGraph = ({graphObj, nodeColors,numberColors}) => {
         graphObj.edges().map(edge => ({
             from: edge.v,
             to: edge.w,
-        //   arrows: 'to',
             color: "#2a84de"
         }))
         );
   
         
-        // console.log(Array.from(nodes.get()));  // Log nodes to console
-        // console.log(Array.from(edges.get()));  // Log edges to console
+   
         return [nodes, edges]
     
         
     };
 
     useEffect(() => {
-        if (!nodeColors || !graphRef.current.nodes) return;
-            
-
         
-        const updates = Object.keys(nodeColors).map(key => ({
+        if (!coloringGraph.coloring || !graphFinished || !graphRef.current.nodes) return;
+         
+        
+        const colors = generateColors(coloringGraph.numColors)
+        
+        const updates = Object.keys(coloringGraph.coloring).map(key => ({
             id: key,
-            color: colors[nodeColors[key]]
+            color: colors[coloringGraph.coloring[key]]
         }));
-        console.log(updates)
+        
         graphRef.current.nodes.update(updates);  // Efficiently update colors
-    }, [nodeColors]);  // Re-run this effect only when nodeColors changes
+    }, [coloringGraph, graphFinished]);  // Re-run this effect only when nodeColors changes
 
     useEffect(() => {
         
@@ -81,12 +98,14 @@ const NetworkGraph = ({graphObj, nodeColors,numberColors}) => {
             edges: edges
         };
         const network = new Network(networkRef.current, graphRef.current, options);
+        setGraphFinished(true)
         // console.log(nodesRef.current)
         // console.log(edgesRef.current)
         return () => {
             if (network) {
               network.destroy();
             }
+            setGraphFinished(false);
           };
     }, [graphObj]);
 
