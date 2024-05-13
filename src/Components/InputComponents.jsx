@@ -5,9 +5,11 @@ import {Layout, theme } from 'antd';
 import MyEditor from './Editor';
 import ParametersForm from './ParametersForm';
 import NetworkGraph from './NetworkGraph';
-import OutputComponent from './Modules/OutputComponent';
+import OutputWindowComponent from './Modules/OutputWindowComponent';
 import useFetching from '../Hooks/useFetching';
 import { read } from 'graphlib-dot';
+import FileComponent from './FileComponent';
+import { FlashOnOutlined } from '@mui/icons-material';
 
 
 function InputComponent({createAndFetch}) {
@@ -39,7 +41,7 @@ function InputComponent({createAndFetch}) {
               className="column_small"
               span={8}>
               <ParametersForm setData={setInputData}/>
-              
+              {/* <FileComponent/> */}
             </Col>
           </Row>
     );

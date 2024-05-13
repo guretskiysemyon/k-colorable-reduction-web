@@ -5,10 +5,11 @@ import {Layout, theme } from 'antd';
 import MyEditor from './Editor';
 import ParametersForm from './ParametersForm';
 import NetworkGraph from './NetworkGraph';
-import OutputComponent from './Modules/OutputComponent';
+import OutputWindowComponent from './Modules/OutputWindowComponent';
 import useFetching from '../Hooks/useFetching';
 import { read } from 'graphlib-dot';
 import InputComponent from './InputComponents';
+import OutputComponent from './OutputComponent';
 
 const { Content} = Layout;
 
@@ -28,7 +29,7 @@ function ContentComponent() {
     //     numColors: 3,
     //     theory : undefined
     // })
-
+    const [numColors, setNumColors] = useState(3)
     const [coloringGraph, setColoringGraph] = useState({
       numColors: 3,
       coloring : null
@@ -40,7 +41,7 @@ function ContentComponent() {
     
     function showResult(data){
       //console.log(data)
-      let text = data.formula + "\n"
+      let text = "Formula:\n" + data.formula + "\n\n"
       //setColorMap(data.solution)
       if (data.result === "unsat"){
         text += "Not Colorable"
@@ -60,8 +61,15 @@ function ContentComponent() {
 
     useEffect(() => {
       
-      if (fetchedData)
-          showResult(fetchedData);
+      if (fetchedData){
+        console.log(fetchedData)
+        setColoringGraph({
+          numColors: numColors,
+          coloring : fetchedData.solution
+        })
+        showResult(fetchedData);
+      }
+          
     },[fetchedData])
 
     function parse(strGraph) {
@@ -80,16 +88,14 @@ function ContentComponent() {
       if (strGraph && inputData.numColors  && inputData.theory) {
         setOutput("")
         try {
+          setNumColors(inputData.numColors)
           const parsedGraph = parse(strGraph);
           setInputGraph(parsedGraph);
-          console.log(parsedGraph)
+          //console.log(parsedGraph)
           
           await fetchGraph(strGraph, inputData.numColors, inputData.theory);
-          console.log(fetchedData.solution)
-          setColoringGraph({
-            numColors: inputData.numColors,
-            coloring : fetchedData ? fetchedData.solution : null
-          })
+          //console.log(fetchedData.solution)
+          
           // console.log(fetchedData)  
           // showResult(data);
           // showResult(fetchedData); // Call showResult only when both conditions are met
@@ -117,21 +123,12 @@ function ContentComponent() {
         >
           <Content className='content'>
           <InputComponent createAndFetch={createGraphAndFetchResult} />
-          <Row>
-            <Col
-              span={16}
-            >
-              <OutputComponent text={output}/>
-            </Col>
-          </Row>
-          <Row>
-            {error
-            ? <p>Error fetching data: {error.message}</p>
-            : <NetworkGraph coloringGraph={coloringGraph} graphObj= {inputGraph}/>
-
-            }
-            
-          </Row>
+          <OutputComponent
+            outputText={output}
+            error={error}
+            coloringGraph={coloringGraph}
+            inputGraph={inputGraph}
+          />
           </Content>
           
         </Layout>

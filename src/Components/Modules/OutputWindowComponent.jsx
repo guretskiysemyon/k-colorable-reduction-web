@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from "./OutputComponent.module.css"
 
-const OutputComponent = ({ text }) => {
+const OutputWindowComponent = ({ text }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -30,4 +30,4 @@ const OutputComponent = ({ text }) => {
   );
 };
 
-export default OutputComponent;
+export default OutputWindowComponent;

@@ -9,10 +9,12 @@ import MyHeader from './Components/MyHeader';
 import FooterComponent from './Components/FooterComponent';
 import ContentComponent from './Components/ContentComponent';
 import AboutComponent from './Components/AboutComponent';
+import FileComponent from './Components/FileComponent';
 
 
 const App = () => {
   return (
+    
     <Router>
       <Layout>
         <MyHeader />

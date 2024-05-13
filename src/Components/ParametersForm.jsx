@@ -102,6 +102,7 @@
 
 import React, { useState } from "react";
 import { Button, Form, InputNumber, Select } from "antd";
+import FileComponent from "./FileComponent";
 
 const ParametersForm = ({ setData}) => {
   const [componentSize, setComponentSize] = useState("default");
@@ -152,6 +153,9 @@ const ParametersForm = ({ setData}) => {
         <Select placeholder="Please select a theory" allowClear>
           {theories.map(t => <Select.Option key={t} value={t}>{t}</Select.Option>)}
         </Select>
+      </Form.Item>
+      <Form.Item>
+        <FileComponent/>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">Solve</Button>
