@@ -10,6 +10,8 @@ import useFetching from '../Hooks/useFetching';
 import { read } from 'graphlib-dot';
 import InputComponent from './InputComponents';
 import OutputComponent from './OutputComponent';
+import { message } from 'antd';
+
 
 const { Content} = Layout;
 
@@ -24,11 +26,7 @@ function ContentComponent() {
 
     
     const [inputGraph, setInputGraph] = useState(null)
-    // const [strGraph, setStrInputGraph] = useState("")
-    // const [inputData, setInputData] = useState({
-    //     numColors: 3,
-    //     theory : undefined
-    // })
+
     const [numColors, setNumColors] = useState(3)
     const [coloringGraph, setColoringGraph] = useState({
       numColors: 3,
@@ -80,34 +78,39 @@ function ContentComponent() {
       } catch(err) {
           setOutput('Invalid DOT format or other error parsing the file.');
           console.log('Error parsing DOT file:', err);
+          return null;
       }
     }
+    
+    // Function to read file content
+    const readFileContent = (file, callback) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        callback(e.target.result);
+      };
+      reader.onerror = e => {
+        message.error('Failed to read file!');
+      };
+      reader.readAsText(file);
+    };
   
     async function createGraphAndFetchResult(strGraph, inputData) {
       
-      if (strGraph && inputData.numColors  && inputData.theory) {
-        setOutput("")
-        try {
-          setNumColors(inputData.numColors)
-          const parsedGraph = parse(strGraph);
-          setInputGraph(parsedGraph);
-          //console.log(parsedGraph)
-          
-          await fetchGraph(strGraph, inputData.numColors, inputData.theory);
-          //console.log(fetchedData.solution)
-          
-          // console.log(fetchedData)  
-          // showResult(data);
-          // showResult(fetchedData); // Call showResult only when both conditions are met
+     
+      setOutput("")
+      try {
+        setNumColors(inputData.numColors)
+        const parsedGraph = parse(strGraph);
+        setInputGraph(parsedGraph);
+        
+        await fetchGraph(strGraph, inputData.numColors, inputData.theory);
 
-          //setFetchedData(data)
-          // Prepare the data to be sent
-          
-        } catch (err) {
-            setOutput("Fail to connect to server!")
-            console.log(err)
-        }
+        
+      } catch (err) {
+          setOutput("Fail to connect to server!")
+          console.log(err)
       }
+      
     }
       
 

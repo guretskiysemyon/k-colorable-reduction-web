@@ -17,14 +17,15 @@ function InputComponent({createAndFetch}) {
     const [strGraph, setStrInputGraph] = useState("")
     const [inputData, setInputData] = useState({
         numColors: defaultValue,
-        theory : undefined
+        theory : undefined,
+        mode: 'text',
+        file: undefined
     })
 
     useEffect(()=> {
         console.log(inputData)
-        if (inputData.numColors && inputData.theory && strGraph){
+        if (inputData.theory && strGraph){
             createAndFetch(strGraph, inputData)
-            //console.log("Called")
         }
             
     }, [inputData])
