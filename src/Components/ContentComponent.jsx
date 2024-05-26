@@ -33,85 +33,93 @@ function ContentComponent() {
       coloring : null
     })
     const [output, setOutput] = useState("")
-    const { fetchedData, error, fetchGraph } = useFetching();
+    const {  error } = useFetching();
     
     
     
-    function showResult(data){
-      //console.log(data)
-      let text = "Formula:\n" + data.formula + "\n\n"
-      //setColorMap(data.solution)
-      if (data.result === "unsat"){
-        text += "Not Colorable"
-        setOutput(text)
-        return
-      }
-      text += "Colorable\n"
-      //console.log(data.solution)
-      for (const key in data.solution) {
-        if (data.solution.hasOwnProperty(key)) {  // This check is necessary to ensure you only access properties defined on the object itself
-          text += key + ": " + data.solution[key] + "\n";
-        }
-      }
-      // text += data.solution
-      setOutput(text)
-    }
+    // function showResult(data){
+    //   //console.log(data)
+    //   let text = "Formula:\n" + data.formula + "\n\n"
+    //   //setColorMap(data.solution)
+    //   if (data.result === "unsat"){
+    //     text += "Not Colorable"
+    //     setOutput(text)
+    //     return
+    //   }
+    //   text += "Colorable\n"
+    //   //console.log(data.solution)
+    //   for (const key in data.solution) {
+    //     if (data.solution.hasOwnProperty(key)) {  // This check is necessary to ensure you only access properties defined on the object itself
+    //       text += key + ": " + data.solution[key] + "\n";
+    //     }
+    //   }
+    //   // text += data.solution
+    //   setOutput(text)
+    // }
 
-    useEffect(() => {
+    // useEffect(() => {
       
-      if (fetchedData){
-        console.log(fetchedData)
-        setColoringGraph({
-          numColors: numColors,
-          coloring : fetchedData.solution
-        })
-        showResult(fetchedData);
-      }
+    //   if (fetchedData){
+    //     console.log(fetchedData)
+    //     setColoringGraph({
+    //       numColors: numColors,
+    //       coloring : fetchedData.solution
+    //     })
+    //     showResult(fetchedData);
+    //   }
           
-    },[fetchedData])
+    // },[fetchedData])
 
-    function parse(strGraph) {
-      //console.log('Starting parse with strGraph:', strGraph); // Log input
-      try {
-          const parsedGraph = read(strGraph);
-          return parsedGraph
-      } catch(err) {
-          setOutput('Invalid DOT format or other error parsing the file.');
-          console.log('Error parsing DOT file:', err);
-          return null;
-      }
-    }
+    // function parse(strGraph) {
+    //   //console.log('Starting parse with strGraph:', strGraph); // Log input
+    //   try {
+    //       const parsedGraph = read(strGraph);
+    //       return parsedGraph
+    //   } catch(err) {
+    //       setOutput('Invalid DOT format or other error parsing the file.');
+    //       console.log('Error parsing DOT file:', err);
+    //       return null;
+    //   }
+    // }
     
-    // Function to read file content
-    const readFileContent = (file, callback) => {
-      const reader = new FileReader();
-      reader.onload = e => {
-        callback(e.target.result);
-      };
-      reader.onerror = e => {
-        message.error('Failed to read file!');
-      };
-      reader.readAsText(file);
-    };
+    // // Function to read file content
+    // const readFileContent = (file, callback) => {
+    //   const reader = new FileReader();
+    //   reader.onload = e => {
+    //     callback(e.target.result);
+    //   };
+    //   reader.onerror = e => {
+    //     message.error('Failed to read file!');
+    //   };
+    //   reader.readAsText(file);
+    // };
   
-    async function createGraphAndFetchResult(strGraph, inputData) {
+    // async function createGraphAndFetchResult(strGraph, inputData) {
+    //   //console.log("Here")
+    //   setOutput("")
+    //   if (inputData.mode === 'file'){
+    //     readFileContent(inputData.file, (content) => {
+    //       const parsedGraph = parse(content);
+    //       setInputGraph(parsedGraph);
+    //     })
+    //     return
+    //   }
+
       
-     
-      setOutput("")
-      try {
-        setNumColors(inputData.numColors)
-        const parsedGraph = parse(strGraph);
-        setInputGraph(parsedGraph);
+    //   try {
+    //     setNumColors(inputData.numColors)
+    //     const parsedGraph = parse(strGraph);
+    //     setInputGraph(parsedGraph);
         
-        await fetchGraph(strGraph, inputData.numColors, inputData.theory);
+    //     await fetchGraph(strGraph, inputData.numColors, inputData.theory);
 
         
-      } catch (err) {
-          setOutput("Fail to connect to server!")
-          console.log(err)
-      }
+    //   } catch (err) {
+    //       setOutput("Fail to connect to server!")
+    //       console.log(err)
+    //   }
       
-    }
+    // }
       
 
     
@@ -125,7 +133,7 @@ function ContentComponent() {
           }}
         >
           <Content className='content'>
-          <InputComponent createAndFetch={createGraphAndFetchResult} />
+          <InputComponent setOutput={setOutput} setInputGraph={setInputGraph} setColoringGraph={setColoringGraph} />
           <OutputComponent
             outputText={output}
             error={error}

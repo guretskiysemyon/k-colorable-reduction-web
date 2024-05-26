@@ -19,24 +19,7 @@ const NetworkGraph = ({graphObj, coloringGraph}) => {
 
     function createGraph (){
         setGraphFinished(false)
-        // console.log(graphObj.nodes())
-        // console.log(graphObj.edges())
-        // console.log("Node Data Being Added", graphObj.nodes().map(nodeId => {
-        //   const nodeDetails = graphObj._nodes[nodeId];
-        //   return {
-        //     id: nodeId,
-        //     label: nodeDetails.label || nodeId,
-        //     font: { color: '#ffffff' }
-        //   };
-        // }));
         
-        // console.log("Edge Data Being Added", graphObj.edges().map(edge => {
-        //   return {
-        //     from: edge.v,
-        //     to: edge.w,
-        //     color: "#2a84de"
-        //   };
-        // }));
         
         const nodes = new DataSet(
             graphObj.nodes().map(nodeId => {
@@ -97,6 +80,7 @@ const NetworkGraph = ({graphObj, coloringGraph}) => {
             nodes: nodes,
             edges: edges
         };
+        console.log(graphObj)
         const network = new Network(networkRef.current, graphRef.current, options);
         setGraphFinished(true)
         // console.log(nodesRef.current)

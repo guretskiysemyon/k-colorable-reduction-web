@@ -23,7 +23,7 @@ const ParametersForm = ({ setData }) => {
       numColors: values.numColors,
       theory: values.theory,
       mode: isFileMode ? 'file' : 'text',
-      file: values.file,
+      file: isFileMode ? values.file[0].originFileObj : null,
     });
   };
 
