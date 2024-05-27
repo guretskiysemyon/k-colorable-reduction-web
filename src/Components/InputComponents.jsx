@@ -112,7 +112,7 @@ function InputComponent({setOutput, setColoringGraph, setInputGraph}) {
           })
           await fetchGraph(inputData.mode, inputData.file, inputData.numColors, inputData.theory);
         
-        } else if (inputData.data === 'text'){
+        } else if (inputData.mode === 'text'){
           const parsedGraph = parse(strGraph);
           setInputGraph(parsedGraph);
           
