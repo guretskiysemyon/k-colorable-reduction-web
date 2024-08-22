@@ -14,9 +14,9 @@ const OutputWindowComponent = ({ text }) => {
       setIsCopied(false);
     }
   };
-  useEffect( () => {
+  // useEffect( () => {
     
-  })
+  // })
 
   return (
     <div className={styles.container}>

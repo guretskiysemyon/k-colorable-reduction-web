@@ -26,7 +26,9 @@ function InputComponent({setOutput, setColoringGraph, setInputGraph}) {
         console.log(inputData)
         let condition = inputData.theory && 
 						((inputData.mode === 'text' && strGraph) || (inputData.mode === 'file' && inputData.file) )
+        
         if (condition){
+        
             createGraphAndFetchResult(strGraph, inputData)
         }
             
@@ -83,7 +85,13 @@ function InputComponent({setOutput, setColoringGraph, setInputGraph}) {
       }
     }
     
-    // Function to read file content
+    /*
+    * Function that read .dot file.
+    * It recieve file and callback function. 
+    * Create reader, define that when file will be loaded the callback function willl be called
+    * Define a behaivour when there is error.
+    * Read file.
+    */
     const readFileContent = (file, callback) => {
       const reader = new FileReader();
       reader.onload = e => {

@@ -8,6 +8,7 @@ const NetworkGraph = ({graphObj, coloringGraph}) => {
     const [graphFinished, setGraphFinished] = useState(false)
     
     
+    // Function that generates colors.
     function generateColors(numColors) {
         const colors = [];
         for (let i = 0; i < numColors; i++) {
@@ -17,8 +18,11 @@ const NetworkGraph = ({graphObj, coloringGraph}) => {
         return colors;
       } 
 
+    
+
     function createGraph (){
         setGraphFinished(false)
+        
         
         
         const nodes = new DataSet(

@@ -27,7 +27,7 @@ function ContentComponent() {
     
     const [inputGraph, setInputGraph] = useState(null)
 
-    const [numColors, setNumColors] = useState(3)
+    // const [numColors, setNumColors] = useState(3)
     const [coloringGraph, setColoringGraph] = useState({
       numColors: 3,
       coloring : null
