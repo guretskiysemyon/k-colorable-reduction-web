@@ -1,11 +1,11 @@
-import { useState } from "react";
+
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
-import { Code } from "@mui/icons-material";
+
 
 function MyEditor({strInputGraph, setStrInputGraph}) {
     const placeholder = "Enter you graph here in this way \n{\n '1' : [2,3],\n '2': [1,4],...\n}"

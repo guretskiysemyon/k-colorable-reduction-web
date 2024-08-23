@@ -2,29 +2,43 @@
 
 import './App.css';
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Layout } from 'antd';
 
-import MyHeader from './Components/MyHeader';
-import FooterComponent from './Components/FooterComponent';
-import ContentComponent from './Components/ContentComponent';
-import AboutComponent from './Components/AboutComponent';
-import FileComponent from './Components/FileComponent';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useGlobalError } from './Hooks/useGlobalError';
+import RouterComponent from './Components/RouterComponent';
 
+
+// const queryClient = new QueryClient()
+
+
+
+export const ErrorContext = React.createContext(null);
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      onError: (error) => {
+        // You can handle global query errors here
+        console.error('Query error:', error);
+      },
+    },
+    mutations: {
+      onError: (error) => {
+        // You can handle global mutation errors here
+        console.error('Mutation error:', error);
+      },
+    },
+  },
+});
 
 const App = () => {
+  const errorState = useGlobalError();
   return (
-    
-    <Router>
-      <Layout>
-        <MyHeader />
-        <Routes>
-          <Route path="/" element={<ContentComponent />} />
-          <Route path="/about" element={<AboutComponent />} />
-        </Routes>
-        <FooterComponent />
-      </Layout>
-    </Router>
+    <ErrorContext.Provider value={errorState}>
+    <QueryClientProvider client={queryClient}>
+      <RouterComponent/>
+    </QueryClientProvider>
+    </ErrorContext.Provider>
   );
 };
 

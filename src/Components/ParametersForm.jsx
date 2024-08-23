@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form, InputNumber, Select, Switch, Upload, Row, Col } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
-import FileComponent from "./FileComponent";
+
 
 const ParametersForm = ({ setData }) => {
   const [componentSize, setComponentSize] = useState("default");

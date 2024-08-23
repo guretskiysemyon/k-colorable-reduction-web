@@ -1,16 +1,9 @@
 
-import React, { useState, useEffect} from 'react';
-import { Col, Row } from 'antd';
+import React, { useState, useContext} from 'react';
 import {Layout, theme } from 'antd';
-import MyEditor from './Editor';
-import ParametersForm from './ParametersForm';
-import NetworkGraph from './NetworkGraph';
-import OutputWindowComponent from './Modules/OutputWindowComponent';
-import useFetching from '../Hooks/useFetching';
-import { read } from 'graphlib-dot';
 import InputComponent from './InputComponents';
 import OutputComponent from './OutputComponent';
-import { message } from 'antd';
+import { ErrorContext } from '../App'; // Adjust the import path as necessary
 
 
 const { Content} = Layout;
@@ -33,7 +26,8 @@ function ContentComponent() {
       coloring : null
     })
     const [output, setOutput] = useState("")
-    const {  error } = useFetching();
+    // Use the error context instead of useFetching
+    const { error } = useContext(ErrorContext);
     
     
     
