@@ -51,7 +51,7 @@ const ParametersForm = ({ setData }) => {
         wrapperCol={{ span: 8 }}
         rules={[{ required: true, message: 'Please input the number of colors!', type: 'number', min: 1 }]}
       >
-        <InputNumber min={1} max={10} />
+        <InputNumber min={1} max={1000} />
       </Form.Item>
       <Form.Item
         name="theory"
