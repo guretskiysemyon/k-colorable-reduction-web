@@ -28,10 +28,6 @@ const ParametersForm = ({ setData }) => {
   };
 
   
-  // const onFileChange = info => {
-  //   let newFileList = info.fileList.slice(-1); // Only keep the last file uploaded
-  //   setFileList(newFileList);
-  // };
 
   return (
     <Form

@@ -4,7 +4,7 @@ import {Layout, theme } from 'antd';
 import InputComponent from './InputComponents';
 import OutputComponent from './OutputComponent';
 import { ErrorContext } from '../App'; // Adjust the import path as necessary
-
+import useStore from '../store';
 
 const { Content} = Layout;
 
@@ -16,18 +16,20 @@ function ContentComponent() {
       } = theme.useToken();
     
     
+    
+      const { inputGraph, coloringGraph, output, error } = useStore();
 
     
-    const [inputGraph, setInputGraph] = useState(null)
+    // const [inputGraph, setInputGraph] = useState(null)
 
-    // const [numColors, setNumColors] = useState(3)
-    const [coloringGraph, setColoringGraph] = useState({
-      numColors: 3,
-      coloring : null
-    })
-    const [output, setOutput] = useState("")
-    // Use the error context instead of useFetching
-    const { error } = useContext(ErrorContext);
+    // // const [numColors, setNumColors] = useState(3)
+    // const [coloringGraph, setColoringGraph] = useState({
+    //   numColors: 3,
+    //   coloring : null
+    // })
+    // const [output, setOutput] = useState("")
+    // // Use the error context instead of useFetching
+    // const { error } = useContext(ErrorContext);
     
     
     
@@ -42,7 +44,7 @@ function ContentComponent() {
           }}
         >
           <Content className='content'>
-          <InputComponent setOutput={setOutput} setInputGraph={setInputGraph} setColoringGraph={setColoringGraph} />
+          <InputComponent/>
           <OutputComponent
             outputText={output}
             error={error}

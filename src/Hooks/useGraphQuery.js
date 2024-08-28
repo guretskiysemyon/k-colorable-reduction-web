@@ -1,33 +1,29 @@
 // hooks/useGraphQuery.js
 import { useQuery, useMutation } from '@tanstack/react-query'
 import ColorableService from '../Service/ColorableService'
+import useStore from '../store';
 
 export function useGraphQuery() {
-  const fetchGraph = async ({ mode, graphData, numColors, theory }) => {
-    if (mode === "text") {
-      return ColorableService.getSolutionString(graphData, numColors, theory)
-    } else if (mode === "file") {
-      return ColorableService.getSolutionFile(graphData, numColors, theory)
-    }
-  }
+  const { setGraphData, setColoringGraph, setOutput, setError } = useStore();
 
-  const mutation = useMutation({
-    mutationFn: fetchGraph,
-    onSuccess: (data) => {
-      // You can handle success here if needed
-      console.log('Graph fetched successfully:', data)
+  return useMutation({
+    mutationFn: ({ mode, graphData, numColors, theory }) => 
+      ColorableService.processGraph(mode, graphData, numColors, theory),
+    onSuccess: (response, variables) => {
+      const data = response.data;
+      setGraphData(data.graph);
+      setColoringGraph({
+        numColors: variables.numColors, // Use the original numColors
+        coloring: data.solution
+      });
+      setOutput(data.formula);
     },
     onError: (error) => {
-      // Handle error here
-      console.error('Error fetching graph:', error)
+      setError(error);
+      setOutput(`Error: ${error.message}`);
     }
-  })
-
-  return mutation
+  });
 }
-
-
-
 
 
 

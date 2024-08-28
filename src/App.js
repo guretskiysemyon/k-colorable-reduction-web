@@ -12,7 +12,7 @@ import RouterComponent from './Components/RouterComponent';
 
 
 
-export const ErrorContext = React.createContext(null);
+// export const ErrorContext = React.createContext(null);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,11 +34,11 @@ const queryClient = new QueryClient({
 const App = () => {
   const errorState = useGlobalError();
   return (
-    <ErrorContext.Provider value={errorState}>
+   
     <QueryClientProvider client={queryClient}>
       <RouterComponent/>
     </QueryClientProvider>
-    </ErrorContext.Provider>
+   
   );
 };
 

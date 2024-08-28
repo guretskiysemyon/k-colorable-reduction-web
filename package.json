@@ -22,7 +22,8 @@
     "react-simple-code-editor": "^0.13.1",
     "vis-data": "^7.1.9",
     "vis-network": "^9.1.9",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.5.5"
   },
   "scripts": {
     "start": "react-scripts start",
