@@ -13,14 +13,17 @@ function InputComponent() {
     const [strGraph, setStrInputGraph] = useState("")
     const [inputData, setInputData] = useState({
         numColors: defaultValue,
+        solver: undefined,
         theory : undefined,
         mode: 'text',
         file: undefined
     })
 
-    const { setInputGraph, setColoringGraph, setOutput, setError } = useStore();
+    const { setColoringGraph, setOutput, setError } = useStore();
      // New: Use the custom hook
     const graphMutation = useGraphQuery();
+
+
 
     useEffect(()=> {
         console.log(inputData)
@@ -28,7 +31,7 @@ function InputComponent() {
 						((inputData.mode === 'text' && strGraph) || (inputData.mode === 'file' && inputData.file) )
         
         if (condition){
-        
+            setError("")
             createGraphAndFetchResult(strGraph, inputData)
         }
             
@@ -72,48 +75,6 @@ function InputComponent() {
   }, [graphMutation.isSuccess, graphMutation.isError]);
 
 
-  //   function parse(strGraph) {
-  //     try {
-  //         const parsedGraph = read(strGraph);
-  //         if (!parsedGraph || !parsedGraph.nodes().length) {
-  //             throw new Error('Graph is empty or invalid');
-  //         }
-  //         return parsedGraph
-  //     } catch(err) {
-  //         let errorMessage = 'Error parsing graph: ';
-  //         if (err.message.includes('Syntax error')) {
-  //             errorMessage += 'Invalid DOT format. Please check your syntax.';
-  //         } else if (err.message.includes('empty or invalid')) {
-  //             errorMessage += 'The graph is empty or invalid. Please provide a valid graph.';
-  //         } else {
-  //             errorMessage += err.message;
-  //         }
-  //         setOutput(errorMessage);
-  //         console.error('Error parsing DOT file:', err);
-  //         return null;
-  //     }
-  // }
-    /*
-    * Function that read .dot file.
-    * It recieve file and callback function. 
-    * Create reader, define that when file will be loaded the callback function willl be called
-    * Define a behaivour when there is error.
-    * Read file.
-    // */
-    // const readFileContent = (file) => {
-    //   return new Promise((resolve, reject) => {
-    //       const reader = new FileReader();
-    //       reader.onload = e => resolve(e.target.result);
-    //       reader.onerror = e => {
-    //           message.error('Failed to read file: ' + e.target.error.message);
-    //           reject(e);
-    //       };
-    //       reader.readAsText(file);
-    //   });
-    // };
-
-
-
       
     async function createGraphAndFetchResult(strGraph, inputData) {
       setOutput("")
@@ -125,7 +86,8 @@ function InputComponent() {
               mode: inputData.mode,
               graphData: inputData.mode === 'file' ? inputData.file : strGraph,
               numColors: inputData.numColors,
-              theory: inputData.theory
+              theory: inputData.theory,
+              solver : inputData.solver
           });
       } catch (err) {
           setOutput("Failed to process graph!")
@@ -144,7 +106,6 @@ function InputComponent() {
               className="column_small"
               span={8}>
               <ParametersForm setData={setInputData}/>
-              {/* <FileComponent/> */}
             </Col>
           </Row>
     );

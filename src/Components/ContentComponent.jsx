@@ -45,12 +45,7 @@ function ContentComponent() {
         >
           <Content className='content'>
           <InputComponent/>
-          <OutputComponent
-            outputText={output}
-            error={error}
-            coloringGraph={coloringGraph}
-            inputGraph={inputGraph}
-          />
+          <OutputComponent/>
           </Content>
           
         </Layout>

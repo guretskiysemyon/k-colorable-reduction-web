@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, InputNumber, Select, Switch, Upload, Row, Col } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
-
 
 const ParametersForm = ({ setData }) => {
   const [componentSize, setComponentSize] = useState("default");
   const [isFileMode, setIsFileMode] = useState(false);
+  const [selectedSolver, setSelectedSolver] = useState(null);
+  const [availableTheories, setAvailableTheories] = useState([]);
   const defaultNumColors = 3;
 
-  const theories = ["LIA", "NLA", "Array"];
+  const solver = ["msat", "z3", "yices"]; // Corrected typo 'msat'
+
+  const SOLVER_THEORY_MAP = {
+    "msat": ["LIA", "ARRAY", "BV"],
+    "z3": ["LIA", "NLA", "ARRAY", "BV"],
+    "yices": ["LIA", "ARRAY"]
+  };
+
+  useEffect(() => {
+    if (selectedSolver && SOLVER_THEORY_MAP[selectedSolver]) {
+      setAvailableTheories(SOLVER_THEORY_MAP[selectedSolver]);
+    } else {
+      setAvailableTheories([]);
+    }
+  }, [selectedSolver]);
+
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
@@ -18,16 +34,14 @@ const ParametersForm = ({ setData }) => {
   };
 
   const onFinish = values => {
-    console.log("called")
     setData({
       numColors: values.numColors,
+      solver: values.solver,
       theory: values.theory,
       mode: isFileMode ? 'file' : 'text',
       file: isFileMode ? values.file[0].originFileObj : null,
     });
   };
-
-  
 
   return (
     <Form
@@ -50,14 +64,33 @@ const ParametersForm = ({ setData }) => {
         <InputNumber min={1} max={1000} />
       </Form.Item>
       <Form.Item
+        name="solver"
+        label="Select Solver"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 12 }}
+        rules={[{ required: true, message: "Please select a solver!" }]}
+      >
+        <Select
+          placeholder="Please select a solver"
+          allowClear
+          onChange={setSelectedSolver}
+        >
+          {solver.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
+        </Select>
+      </Form.Item>
+      <Form.Item
         name="theory"
         label="Select Theory"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 12 }}
         rules={[{ required: true, message: "Please select a theory!" }]}
       >
-        <Select placeholder="Please select a theory" allowClear>
-          {theories.map(t => <Select.Option key={t} value={t}>{t}</Select.Option>)}
+        <Select
+          placeholder="Please select a theory"
+          allowClear
+          disabled={!selectedSolver || availableTheories.length === 0}
+        >
+          {availableTheories.map(t => <Select.Option key={t} value={t}>{t}</Select.Option>)}
         </Select>
       </Form.Item>
       <Form.Item
@@ -94,7 +127,6 @@ const ParametersForm = ({ setData }) => {
                   },
                 }),
               ]}
-              
               noStyle
             >
               <Upload
