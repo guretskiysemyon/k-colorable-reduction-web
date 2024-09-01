@@ -7,7 +7,7 @@ import useStore from '../store';
 
 
 function OutputComponent() {
-  const { output, error, coloringGraph, inputGraph } = useStore();
+  const { output, error} = useStore();
   return ( <>
     <Row>
             <Col
