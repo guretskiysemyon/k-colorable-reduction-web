@@ -27,7 +27,7 @@ function InputComponent() {
 
     useEffect(()=> {
         console.log(inputData)
-        let condition = inputData.theory && 
+        let condition = inputData.theory && inputData.solver &&
 						((inputData.mode === 'text' && strGraph) || (inputData.mode === 'file' && inputData.file) )
         
         if (condition){

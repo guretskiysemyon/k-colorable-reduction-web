@@ -7,8 +7,8 @@ export function useGraphQuery() {
   const { setGraphData, setColoringGraph, setOutput, setError } = useStore();
 
   return useMutation({
-    mutationFn: ({ mode, graphData, numColors, theory }) => 
-      ColorableService.processGraph(mode, graphData, numColors, theory),
+    mutationFn: ({ mode, graphData, numColors, theory , solver}) => 
+      ColorableService.processGraph(mode, graphData, numColors, theory, solver),
     onSuccess: (response, variables) => {
       const data = response.data;
       setGraphData(data.graph);

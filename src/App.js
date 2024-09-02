@@ -32,7 +32,7 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const errorState = useGlobalError();
+  //const errorState = useGlobalError();
   return (
    
     <QueryClientProvider client={queryClient}>

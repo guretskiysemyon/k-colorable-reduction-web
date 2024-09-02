@@ -17,7 +17,7 @@ function ContentComponent() {
     
     
     
-      const { inputGraph, coloringGraph, output, error } = useStore();
+      // const { inputGraph, coloringGraph, output, error } = useStore();
 
     
     // const [inputGraph, setInputGraph] = useState(null)

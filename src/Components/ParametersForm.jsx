@@ -14,7 +14,7 @@ const ParametersForm = ({ setData }) => {
   const SOLVER_THEORY_MAP = {
     "msat": ["LIA", "ARRAY", "BV"],
     "z3": ["LIA", "NLA", "ARRAY", "BV"],
-    "yices": ["LIA", "ARRAY"]
+    "yices": ["LIA", "BV"]
   };
 
   useEffect(() => {
