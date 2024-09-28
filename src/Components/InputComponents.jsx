@@ -41,7 +41,11 @@ function InputComponent() {
     
     function showResult(data){
       //console.log(data)
-      let text = "Formula:\n" + data.formula + "\n\n"
+      let text = "Formula:\n"
+      for (let value of data.formula) {
+        text += value + "\n"
+    }
+      text += "\n\n"
       //setColorMap(data.solution)
       if (!data.result){
         text += "Not Colorable"

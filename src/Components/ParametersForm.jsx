@@ -9,12 +9,21 @@ const ParametersForm = ({ setData }) => {
   const [availableTheories, setAvailableTheories] = useState([]);
   const defaultNumColors = 3;
 
-  const solver = ["msat", "z3", "yices"]; // Corrected typo 'msat'
+  const solver = ["z3", "yices" , "btor", "cvc5"];
 
   const SOLVER_THEORY_MAP = {
-    "msat": ["LIA", "ARRAY", "BV"],
-    "z3": ["LIA", "NLA", "ARRAY", "BV"],
-    "yices": ["LIA", "BV"]
+    "z3": ["LIA", "NLA", "AUF", "AINT", "ABV", "BV"],
+    "yices": ["LIA"], 
+    "btor" : ["BV", "ABV"], 
+    "cvc5" : ["LIA", "NLA", "AUF", "AINT", "ABV", "BV", "SUF", "SINT", "SBV"],
+  };
+
+  // Theories that require numColors to be a power of 2
+  const powerOfTwoTheories = ['BV', 'SUF', 'SINT', 'SBV'];
+
+  // Function to check if a number is a power of 2
+  const isPowerOfTwo = (num) => {
+    return num && (num & (num - 1)) === 0;
   };
 
   useEffect(() => {
@@ -59,7 +68,21 @@ const ParametersForm = ({ setData }) => {
         label="Number of Colors"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 8 }}
-        rules={[{ required: true, message: 'Please input the number of colors!', type: 'number', min: 1 }]}
+        dependencies={['theory']}
+        rules={[
+          { required: true, message: 'Please input the number of colors!', type: 'number', min: 1 },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              const theory = getFieldValue('theory');
+              if (powerOfTwoTheories.includes(theory)) {
+                if (!isPowerOfTwo(value)) {
+                  return Promise.reject(new Error('For the selected theory, number of colors must be a power of 2'));
+                }
+              }
+              return Promise.resolve();
+            },
+          }),
+        ]}
       >
         <InputNumber min={1} max={1000} />
       </Form.Item>
@@ -133,7 +156,6 @@ const ParametersForm = ({ setData }) => {
                 name="file"
                 beforeUpload={() => false} // Prevent automatic upload
                 disabled={!isFileMode}
-                // onChange={onFileChange}
                 maxCount={1}
                 accept=".dot" // Only accept .dot files
               >

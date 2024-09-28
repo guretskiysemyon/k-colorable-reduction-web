@@ -1,23 +1,22 @@
 .container {
     position: relative;
     margin-bottom: 20px;
-    max-width: 100%; /* Ensures the container does not exceed the width of its parent */
+    max-width: 100%;
 }
 
 .output_window {
     background-color: #001529;
     color: #dcdcdc;
     padding: 25px 30px 20px 20px;
-    
     border-radius: 5px;
     font-family: Consolas, "Courier New", monospace;
     font-size: 15px;
-    overflow-x: auto; /* Keeps horizontal scrolling as originally set */
-    overflow-y: auto; /* Enables vertical scrolling */
-    max-height: 300px; /* Maximum height before vertical scrolling is enabled */
-    min-height: 150px; /* Maximum height before vertical scrolling is enabled */
-    white-space: pre-wrap; /* Preserves whitespace and formatting */
-    word-wrap: break-word; /* Prevents content overflow due to long unbroken text */
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 500px;
+    min-height: 400px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .copy_button {
@@ -32,4 +31,30 @@
     color: white;
     border-radius: 5px;
     font-family: Consolas, "Courier New", monospace;
+}
+
+/* Custom scrollbar styles */
+.output_window::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.output_window::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.output_window::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+.output_window::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* For Firefox */
+.output_window {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.1);
 }
