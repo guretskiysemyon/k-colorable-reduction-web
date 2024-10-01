@@ -7,19 +7,21 @@ import useStore from '../store';
 
 
 function OutputComponent() {
-  const { output, error} = useStore();
+  const { output, error, isLoading} = useStore();
+
+
   return ( <>
     <Row>
             <Col
               span={24}
             >
-              <OutputWindowComponent text={output}/>
+              <OutputWindowComponent text={output} isLoading={isLoading}/>
             </Col>
           </Row>
           <Row>
             {error
             ? <p>Error fetching data: {error.message}</p>
-            : <NetworkGraph/>
+            : <NetworkGraph isLoadingData={isLoading}/>
 
             }
             

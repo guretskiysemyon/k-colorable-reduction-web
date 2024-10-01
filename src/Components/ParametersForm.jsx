@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, InputNumber, Select, Switch, Upload, Row, Col } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
+import useStore from '../store'; // Import useStore
+
 
 const ParametersForm = ({ setData }) => {
   const [componentSize, setComponentSize] = useState("default");
   const [isFileMode, setIsFileMode] = useState(false);
   const [selectedSolver, setSelectedSolver] = useState(null);
   const [availableTheories, setAvailableTheories] = useState([]);
+  const { isLoading } = useStore(); // Get isLoading from the store
   const defaultNumColors = 3;
 
   const solver = ["z3", "yices" , "btor", "cvc5"];
@@ -84,7 +87,7 @@ const ParametersForm = ({ setData }) => {
           }),
         ]}
       >
-        <InputNumber min={1} max={1000} />
+        <InputNumber min={3} max={100} />
       </Form.Item>
       <Form.Item
         name="solver"
@@ -172,7 +175,9 @@ const ParametersForm = ({ setData }) => {
         </Row>
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">Solve</Button>
+        <Button type="primary" htmlType="submit" disabled={isLoading}> 
+          {isLoading ? 'Solving...' : 'Solve'}
+        </Button>
       </Form.Item>
     </Form>
   );
