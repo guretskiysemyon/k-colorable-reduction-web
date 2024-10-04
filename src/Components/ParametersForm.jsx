@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, InputNumber, Select, Switch, Upload, Row, Col } from "antd";
+import { Button, Form, InputNumber, Select, Switch, Upload, Row, Col, message} from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import useStore from '../store'; // Import useStore
 
@@ -9,7 +9,9 @@ const ParametersForm = ({ setData }) => {
   const [isFileMode, setIsFileMode] = useState(false);
   const [selectedSolver, setSelectedSolver] = useState(null);
   const [availableTheories, setAvailableTheories] = useState([]);
+  
   const { isLoading } = useStore(); // Get isLoading from the store
+//   const [legitSize, setLegitSise] = useState(true)
   const defaultNumColors = 3;
 
   const solver = ["z3", "yices" , "btor", "cvc5"];
@@ -20,7 +22,7 @@ const ParametersForm = ({ setData }) => {
     "btor" : ["BV", "ABV"], 
     "cvc5" : ["LIA", "NLA", "AUF", "AINT", "ABV", "BV", "SUF", "SINT", "SBV"],
   };
-
+  const MAX_FILE_SIZE = 5 * 1024
   // Theories that require numColors to be a power of 2
   const powerOfTwoTheories = ['BV', 'SUF', 'SINT', 'SBV'];
 
@@ -46,6 +48,12 @@ const ParametersForm = ({ setData }) => {
   };
 
   const onFinish = values => {
+	//console.log(values.file[0].originFileObj.size <= MAX_FILE_SIZE)
+	//console.log(isFileMode && (values.file[0].originFileObj.size <= MAX_FILE_SIZE))
+    if (isFileMode && ! (values.file[0].originFileObj.size <= MAX_FILE_SIZE)){
+      	message.error('File must be smaller than 5KB!');
+		return
+    }
     setData({
       numColors: values.numColors,
       solver: values.solver,
@@ -54,6 +62,20 @@ const ParametersForm = ({ setData }) => {
       file: isFileMode ? values.file[0].originFileObj : null,
     });
   };
+
+  //const con = (isFileMode && (values.file[0].originFileObj.size <= MAX_FILE_SIZE))
+  const beforeUpload = (file) => {
+    const isLt5M = file.size <= MAX_FILE_SIZE;
+    console.log(isLt5M)
+    if (!isLt5M) {
+      message.error('File must be smaller than 5KB!');
+      return
+    }
+    return isLt5M
+  };
+
+
+  
 
   return (
     <Form
@@ -157,7 +179,7 @@ const ParametersForm = ({ setData }) => {
             >
               <Upload
                 name="file"
-                beforeUpload={() => false} // Prevent automatic upload
+                beforeUpload={beforeUpload} // Prevent automatic upload
                 disabled={!isFileMode}
                 maxCount={1}
                 accept=".dot" // Only accept .dot files
@@ -167,7 +189,7 @@ const ParametersForm = ({ setData }) => {
                   disabled={!isFileMode}
                   style={{ opacity: isFileMode ? 1 : 0.5 }}
                 >
-                  Select File
+                  Select File (Max 5KB)
                 </Button>
               </Upload>
             </Form.Item>

@@ -3,7 +3,7 @@ import axios from "axios"
 export default class ColorableService {
     static async processGraph(mode, graphData, numColors, theory, solver) {
         try {
-            let endpoint = 'http://localhost:8000/graph';
+            let endpoint = 'https://fastapi-app-z6osi6yl5q-zf.a.run.app/graph';
             let data;
             let headers;
 
@@ -38,6 +38,9 @@ export default class ColorableService {
             
             return response;
         } catch (error) {
+            console.log('Full error:', error);
+            console.log('Response:', error.response);
+            console.log('Request:', error.request);
             if (error.response) {
                 throw new Error(`Server error: ${error.response.status} ${error.response.data.message || ''}`);
             } else if (error.request) {

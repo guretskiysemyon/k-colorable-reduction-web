@@ -39,30 +39,6 @@ function InputComponent() {
    
 
     
-    function showResult(data){
-      //console.log(data)
-      let text = "Formula:\n"
-      for (let value of data.formula) {
-        text += value + "\n"
-    }
-      text += "\n\n"
-      //setColorMap(data.solution)
-      if (!data.result){
-        text += "Not Colorable"
-        setOutput(text)
-        return
-      }
-      text += "Colorable\n"
-      //console.log(data.solution)
-      for (const key in data.solution) {
-        if (data.solution.hasOwnProperty(key)) {  // This check is necessary to ensure you only access properties defined on the object itself
-          text += key + ": " + data.solution[key] + "\n";
-        }
-      }
-      // text += data.solution
-      setOutput(text)
-    }
-
     // New: Effect to handle mutation results
     useEffect(() => {
       if (graphMutation.isSuccess) {
@@ -71,7 +47,7 @@ function InputComponent() {
               numColors: inputData.numColors,
               coloring : data.solution
           })
-          showResult(data);
+          //showResult(data);
       }
       if (graphMutation.isError) {
           setOutput(`Error: ${graphMutation.error.message}`);
