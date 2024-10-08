@@ -14,7 +14,7 @@ import AboutComponent from './AboutComponent';
 
 function RouterComponent() {
     return ( 
-        <Router>
+        <Router basename="/k-colorable-reduction-web">
         <Layout>
           <MyHeader />
           <Routes>
