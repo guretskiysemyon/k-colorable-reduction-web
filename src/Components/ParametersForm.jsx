@@ -5,6 +5,8 @@ import useStore from '../store'; // Import useStore
 
 
 const ParametersForm = ({ setData }) => {
+
+  const [form] = Form.useForm();
   const [componentSize, setComponentSize] = useState("default");
   const [isFileMode, setIsFileMode] = useState(false);
   const [selectedSolver, setSelectedSolver] = useState(null);
@@ -14,12 +16,12 @@ const ParametersForm = ({ setData }) => {
 //   const [legitSize, setLegitSise] = useState(true)
   const defaultNumColors = 3;
 
-  const solver = ["z3", "yices" , "btor", "cvc5"];
+  const solver = ["z3", "yices" , "cvc5"];
 
   const SOLVER_THEORY_MAP = {
     "z3": ["LIA", "NLA", "AUF", "AINT", "ABV", "BV"],
     "yices": ["LIA"], 
-    "btor" : ["BV", "ABV"], 
+    //"btor" : ["BV", "ABV"], 
     "cvc5" : ["LIA", "NLA", "AUF", "AINT", "ABV", "BV", "SUF", "SINT", "SBV"],
   };
   const MAX_FILE_SIZE = 5 * 1024
@@ -34,10 +36,18 @@ const ParametersForm = ({ setData }) => {
   useEffect(() => {
     if (selectedSolver && SOLVER_THEORY_MAP[selectedSolver]) {
       setAvailableTheories(SOLVER_THEORY_MAP[selectedSolver]);
+      
+      const currentTheory = form.getFieldValue('theory');
+      if (currentTheory && !SOLVER_THEORY_MAP[selectedSolver].includes(currentTheory)) {
+        form.setFieldsValue({ theory: undefined });
+      }
     } else {
       setAvailableTheories([]);
+      form.setFieldsValue({ theory: undefined });
     }
-  }, [selectedSolver]);
+  }, [selectedSolver, form]);
+
+
 
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -50,10 +60,16 @@ const ParametersForm = ({ setData }) => {
   const onFinish = values => {
 	//console.log(values.file[0].originFileObj.size <= MAX_FILE_SIZE)
 	//console.log(isFileMode && (values.file[0].originFileObj.size <= MAX_FILE_SIZE))
-    if (isFileMode && ! (values.file[0].originFileObj.size <= MAX_FILE_SIZE)){
-      	message.error('File must be smaller than 5KB!');
-		return
+  if (isFileMode) {
+    if (!values.file || values.file.length === 0) {
+      message.error('Please upload a file!');
+      return;
     }
+    if (values.file[0].originFileObj.size > MAX_FILE_SIZE) {
+      message.error('File must be smaller than 5KB!');
+      return;
+    }
+  }
     setData({
       numColors: values.numColors,
       solver: values.solver,
@@ -63,22 +79,14 @@ const ParametersForm = ({ setData }) => {
     });
   };
 
-  //const con = (isFileMode && (values.file[0].originFileObj.size <= MAX_FILE_SIZE))
-  const beforeUpload = (file) => {
-    const isLt5M = file.size <= MAX_FILE_SIZE;
-    console.log(isLt5M)
-    if (!isLt5M) {
-      message.error('File must be smaller than 5KB!');
-      return
-    }
-    return isLt5M
-  };
+  
 
 
   
 
   return (
     <Form
+      form={form}
       labelCol={{ span: 5 }}
       wrapperCol={{ span: 14 }}
       layout="horizontal"
@@ -121,7 +129,10 @@ const ParametersForm = ({ setData }) => {
         <Select
           placeholder="Please select a solver"
           allowClear
-          onChange={setSelectedSolver}
+          onChange={(value) => {
+            setSelectedSolver(value);
+            form.validateFields(['theory']);
+          }}
         >
           {solver.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
         </Select>
@@ -161,25 +172,11 @@ const ParametersForm = ({ setData }) => {
               name="file"
               valuePropName="fileList"
               getValueFromEvent={e => (Array.isArray(e) ? e : e && e.fileList)}
-              dependencies={['file']}
-              rules={[
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!isFileMode) {
-                      return Promise.resolve(); // No need to validate if not in file mode
-                    }
-                    if (value && value.length > 0) {
-                      return Promise.resolve(); // Validation passed
-                    }
-                    return Promise.reject(new Error('Please upload a file!')); // No file uploaded
-                  },
-                }),
-              ]}
               noStyle
             >
               <Upload
                 name="file"
-                beforeUpload={beforeUpload} // Prevent automatic upload
+                beforeUpload={() => false} // Prevent automatic upload
                 disabled={!isFileMode}
                 maxCount={1}
                 accept=".dot" // Only accept .dot files
