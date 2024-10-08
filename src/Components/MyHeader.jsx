@@ -6,8 +6,8 @@ const {Header} = Layout;
 
 
 const items = [
-  { key: 'main', label: <Link to="/k-colorable-reduction-web/">Main</Link> },
-  { key: 'about', label: <Link to="/k-colorable-reduction-web/about">About</Link> }
+  { key: 'main', label: <Link to="/">Main</Link> },
+  { key: 'about', label: <Link to="/about">About</Link> }
 ];
 
 function MyHeader() {
