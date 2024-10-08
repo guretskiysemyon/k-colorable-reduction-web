@@ -4,7 +4,6 @@ import './App.css';
 import React from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useGlobalError } from './Hooks/useGlobalError';
 import RouterComponent from './Components/RouterComponent';
 
 

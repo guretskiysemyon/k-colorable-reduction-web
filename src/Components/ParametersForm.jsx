@@ -16,15 +16,15 @@ const ParametersForm = ({ setData }) => {
 //   const [legitSize, setLegitSise] = useState(true)
   const defaultNumColors = 3;
 
-  const solver = ["z3", "yices" , "cvc5"];
+  const solver = ["z3", "yices" , "btor", "cvc5"];
 
   const SOLVER_THEORY_MAP = {
     "z3": ["LIA", "NLA", "AUF", "AINT", "ABV", "BV"],
     "yices": ["LIA"], 
-    //"btor" : ["BV", "ABV"], 
+    "btor" : ["BV", "ABV"], 
     "cvc5" : ["LIA", "NLA", "AUF", "AINT", "ABV", "BV", "SUF", "SINT", "SBV"],
   };
-  const MAX_FILE_SIZE = 5 * 1024
+  const MAX_FILE_SIZE = 4 * 1024
   // Theories that require numColors to be a power of 2
   const powerOfTwoTheories = ['BV', 'SUF', 'SINT', 'SBV'];
 
@@ -66,7 +66,7 @@ const ParametersForm = ({ setData }) => {
       return;
     }
     if (values.file[0].originFileObj.size > MAX_FILE_SIZE) {
-      message.error('File must be smaller than 5KB!');
+      message.error('File must be smaller than 4KB!');
       return;
     }
   }
@@ -186,7 +186,7 @@ const ParametersForm = ({ setData }) => {
                   disabled={!isFileMode}
                   style={{ opacity: isFileMode ? 1 : 0.5 }}
                 >
-                  Select File (Max 5KB)
+                  Select File (Max 4KB)
                 </Button>
               </Upload>
             </Form.Item>

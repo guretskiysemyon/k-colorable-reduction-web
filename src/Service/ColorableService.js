@@ -4,6 +4,7 @@ export default class ColorableService {
     static async processGraph(mode, graphData, numColors, theory, solver) {
         try {
             let endpoint = 'https://fastapi-app-z6osi6yl5q-zf.a.run.app/graph';
+            //let endpoint = "http://127.0.0.1:8000/graph";
             let data;
             let headers;
 
@@ -31,6 +32,10 @@ export default class ColorableService {
             if (response.status !== 200) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            if (response.status === 504) {
+                throw new Error(`Timeout`);
+            }
             
             if (!response.data || typeof response.data !== 'object') {
                 throw new Error('Unexpected response format');
@@ -38,10 +43,13 @@ export default class ColorableService {
             
             return response;
         } catch (error) {
-            console.log('Full error:', error);
-            console.log('Response:', error.response);
-            console.log('Request:', error.request);
+            // console.log('Full error:', error);
+            // console.log('Response:', error.response);
+            // console.log('Request:', error.request);
             if (error.response) {
+                if (error.response.status === 504){
+                    throw new Error("Couldn't solve the input in a given time.")
+                }
                 throw new Error(`Server error: ${error.response.status} ${error.response.data.message || ''}`);
             } else if (error.request) {
                 throw new Error('Network error: No response received from server');

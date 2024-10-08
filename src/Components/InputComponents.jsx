@@ -3,8 +3,6 @@ import React, { useState, useEffect} from 'react';
 import { Col, Row } from 'antd';
 import MyEditor from './Editor';
 import ParametersForm from './ParametersForm';
-import { read } from 'graphlib-dot';
-import { message } from 'antd';
 import { useGraphQuery } from '../Hooks/useGraphQuery'; // New import
 import useStore from '../store';
 

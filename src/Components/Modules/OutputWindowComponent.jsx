@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from "./OutputComponent.module.css"
 import { Spin } from 'antd'; // Import Spin from Ant Design
 
@@ -16,9 +16,7 @@ const OutputWindowComponent = ({ text, isLoading}) => {
       setIsCopied(false);
     }
   };
-  // useEffect( () => {
-    
-  // })
+
 
   return (
     <div className={styles.container}>

@@ -6,7 +6,7 @@ const {Footer} = Layout;
 function FooterComponent() {
   return (
     <Footer className="footer">
-      Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        Read the 'About' section and visit project's repository.
     </Footer>
   );
 }
