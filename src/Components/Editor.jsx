@@ -8,7 +8,15 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 
 function MyEditor({strInputGraph, setStrInputGraph}) {
-    const placeholder = "Enter you graph here in this way \n{\n '1' : [2,3],\n '2': [1,4],...\n}"
+    const placeholder =  `Enter you undirected graph here in .dot format.
+    
+    graph {
+        1 -- 2;
+        1 -- 3;
+        2 -- 3;
+        ...
+    }`;
+
     const MAX_LENGTH = 4000;
     const [error, setError] = useState(false);
     const [charCount, setCharCount] = useState(0);  // Initialize to 0
