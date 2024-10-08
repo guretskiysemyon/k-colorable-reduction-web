@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/k-colorable-reduction-web/static/css/main.8c425eec.css",
-    "main.js": "/k-colorable-reduction-web/static/js/main.7adb7ab5.js",
+    "main.js": "/k-colorable-reduction-web/static/js/main.9ded0b51.js",
     "static/js/453.9165565b.chunk.js": "/k-colorable-reduction-web/static/js/453.9165565b.chunk.js",
     "index.html": "/k-colorable-reduction-web/index.html",
     "main.8c425eec.css.map": "/k-colorable-reduction-web/static/css/main.8c425eec.css.map",
-    "main.7adb7ab5.js.map": "/k-colorable-reduction-web/static/js/main.7adb7ab5.js.map",
+    "main.9ded0b51.js.map": "/k-colorable-reduction-web/static/js/main.9ded0b51.js.map",
     "453.9165565b.chunk.js.map": "/k-colorable-reduction-web/static/js/453.9165565b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8c425eec.css",
-    "static/js/main.7adb7ab5.js"
+    "static/js/main.9ded0b51.js"
   ]
 }
