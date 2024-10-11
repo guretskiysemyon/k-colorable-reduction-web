@@ -1,52 +1,27 @@
-import React, { useState, useEffect, useRef } from "react";
-import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
+import React, { useState, useEffect } from "react";
+import Editor, { monaco } from "@monaco-editor/react";
 import { message } from 'antd';
+import useStore from '../store';
 
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
-import "prismjs/themes/prism.css";
-
-function MyEditor({strInputGraph, setStrInputGraph}) {
-    const placeholder =  `Enter you undirected graph here in .dot format.
-    
-    graph {
-        1 -- 2;
-        1 -- 3;
-        2 -- 3;
-        ...
-    }`;
-
-    const MAX_LENGTH = 4000;
+function MyEditor() {
+    const { strInputGraph, setStrInputGraph } = useStore();
     const [error, setError] = useState(false);
-    const [charCount, setCharCount] = useState(0);  // Initialize to 0
-    const editorRef = useRef(null);
+    const [charCount, setCharCount] = useState(0);
+    const MAX_LENGTH = 4000;
 
     useEffect(() => {
-        // Update character count on component mount and when strInputGraph changes
         setCharCount(strInputGraph.length);
     }, [strInputGraph]);
 
-    useEffect(() => {
-        const handlePaste = () => {
-            setTimeout(() => {
-                const newLength = editorRef.current?.textContent?.length || 0;
-                setCharCount(newLength);
-                handleLengthCheck(newLength);
-            }, 0);
-        };
-
-        const editorElement = editorRef.current;
-        if (editorElement) {
-            editorElement.addEventListener('paste', handlePaste);
+    function handleEditorChange(value, event) {
+        const newLength = value.length;
+        setCharCount(newLength);
+        handleLengthCheck(newLength);
+        
+        if (newLength <= MAX_LENGTH) {
+            setStrInputGraph(value);
         }
-
-        return () => {
-            if (editorElement) {
-                editorElement.removeEventListener('paste', handlePaste);
-            }
-        };
-    }, []);
+    }
 
     function handleLengthCheck(length) {
         if (length <= MAX_LENGTH) {
@@ -59,41 +34,105 @@ function MyEditor({strInputGraph, setStrInputGraph}) {
         }
     }
 
-    function changeValue(code) {
-        const newLength = code.length;
-        setCharCount(newLength);
-        handleLengthCheck(newLength);
+    const editorOptions = {
         
-        if (newLength <= MAX_LENGTH) {
-            setStrInputGraph(code);
-        }
+        selectOnLineNumbers: true,
+        roundedSelection: false,
+        readOnly: false,
+        cursorStyle: 'line',
+        automaticLayout: true,
+        minimap: { enabled: false },
+        scrollbar: {
+            vertical: 'auto',
+            horizontal: 'hidden',
+            useShadows: false,
+            verticalHasArrows: false,
+            horizontalHasArrows: false,
+            verticalScrollbarSize: 10,
+            alwaysConsumeMouseWheel: false
+        },
+        overviewRulerLanes: 0,
+        fontSize: 14,
+        fontFamily: '"DejaVu Sans Mono", monospace',
+        lineNumbers: 'on',
+        folding: false,
+        lineDecorationsWidth: 10,
+        lineNumbersMinChars: 3,
+        wordWrap: 'on',
+        wrappingStrategy: 'advanced',
+        wordWrapColumn: 80,
+        renderLineHighlight: 'none',
+        scrollBeyondLastLine: false,
+    };
+
+    function handleEditorWillMount(monaco) {
+        monaco.languages.register({ id: 'dot' });
+        monaco.languages.setMonarchTokensProvider('dot', {
+            tokenizer: {
+                root: [
+                    [/\b(graph|node|edge|digraph|subgraph)\b/, "keyword"],
+                    [/\{|\}/, "bracket"],
+                    [/\[|\]/, "square-bracket"],
+                    [/--|->/, "edge-operator"],
+                    [/=/, "equals"],
+                    [/".*?"/, "string"],
+                    [/\/\/.*$/, "comment"],
+                    [/[0-9]+/, "number"],
+                    [/[a-zA-Z_]\w*/, "identifier"],
+                ]
+            }
+        });
+
+        monaco.editor.defineTheme('dotTheme', {
+            base: 'vs',
+            inherit: true,
+            rules: [
+                { token: 'keyword', foreground: '000000' },
+                { token: 'bracket', foreground: '000000' },
+                { token: 'square-bracket', foreground: '000000' },
+                { token: 'edge-operator', foreground: '000000', fontStyle: 'bold' },
+                { token: 'equals', foreground: '000000' },
+                { token: 'string', foreground: '000000' },
+                { token: 'comment', foreground: 'B7B7B7' },
+                { token: 'number', foreground: '8C3061' },
+                { token: 'identifier', foreground: '000000' },
+            ],
+            colors: {
+                'editor.foreground': '#000000',
+                'editor.background': '#FFFFFF',
+                'editorCursor.foreground': '#000000',
+                'editor.lineHighlightBackground': '#FFFFFF',
+                'editorLineNumber.foreground': '#999999',
+                'editorLineNumber.background': '#F0F0F0',
+                'editor.selectionBackground': '#ADD6FF',
+                'editor.inactiveSelectionBackground': '#E5EBF1',
+            }
+        });
     }
 
     return (
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', height: '500px', border: '1px solid #ccc', borderRadius: '4px' }}>
             <Editor
-                placeholder={placeholder}
-                className="text_editor"
+                height="100%"
+                defaultLanguage="dot"
                 value={strInputGraph}
-                padding={10}
-                onValueChange={(code) => changeValue(code)}
-                highlight={(code) => highlight(code, languages.js)}
-                textareaId="codeArea"
-                textareaClassName="editor__textarea"
+                onChange={handleEditorChange}
+                options={editorOptions}
+                beforeMount={handleEditorWillMount}
+                theme="dotTheme"
             />
             <div style={{
                 position: 'absolute',
                 bottom: '5px',
                 right: '10px',
                 fontSize: '12px',
-                color: error ? 'red' : 'inherit'
+                color: error ? 'red' : 'inherit',
+                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                padding: '3px 5px',
+                borderRadius: '3px'
             }}>
                 {charCount} / {MAX_LENGTH}
             </div>
-            <div 
-                ref={editorRef} 
-                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none' }}
-            />
         </div>
     );
 }
