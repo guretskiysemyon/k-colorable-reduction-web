@@ -4,7 +4,9 @@ import axios from "axios"
 export default class ColorableService {
     static async processGraph(graphData, numColors, theory, solver) {
         try {
-            let endpoint = "http://127.0.0.1:8000/graph";
+            
+            //let endpoint = "http://127.0.0.1:8000/graph";
+            let endpoint = "https://fastapi-app-z6osi6yl5q-zf.a.run.app/graph";
             let data = {
                 graph: graphData,
                 k: numColors,

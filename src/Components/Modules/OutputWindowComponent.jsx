@@ -26,7 +26,7 @@ const OutputWindowComponent = ({ text, isLoading}) => {
               <Spin tip="Loading..." />
             </div>
           ) : (
-            text
+            <div dangerouslySetInnerHTML={{ __html: text }} />
           )}
       </pre>
       <button onClick={handleCopy} className={styles.copy_button}>
