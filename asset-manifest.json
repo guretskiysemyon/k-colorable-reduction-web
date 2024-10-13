@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/k-colorable-reduction-web/static/css/main.8c425eec.css",
-    "main.js": "/k-colorable-reduction-web/static/js/main.9ded0b51.js",
+    "main.css": "/k-colorable-reduction-web/static/css/main.6a1e93c1.css",
+    "main.js": "/k-colorable-reduction-web/static/js/main.26b3a584.js",
     "static/js/453.9165565b.chunk.js": "/k-colorable-reduction-web/static/js/453.9165565b.chunk.js",
     "index.html": "/k-colorable-reduction-web/index.html",
-    "main.8c425eec.css.map": "/k-colorable-reduction-web/static/css/main.8c425eec.css.map",
-    "main.9ded0b51.js.map": "/k-colorable-reduction-web/static/js/main.9ded0b51.js.map",
+    "main.6a1e93c1.css.map": "/k-colorable-reduction-web/static/css/main.6a1e93c1.css.map",
+    "main.26b3a584.js.map": "/k-colorable-reduction-web/static/js/main.26b3a584.js.map",
     "453.9165565b.chunk.js.map": "/k-colorable-reduction-web/static/js/453.9165565b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8c425eec.css",
-    "static/js/main.9ded0b51.js"
+    "static/css/main.6a1e93c1.css",
+    "static/js/main.26b3a584.js"
   ]
 }
